@@ -291,7 +291,7 @@ export default function Home() {
                 <p className="text-[12px] text-zinc-500 mt-2 mb-4 line-clamp-2 flex-1">{s.description}</p>
                 <div className="flex items-center justify-between">
                   <span className="text-[13px] font-bold text-emerald-700">{s.amount}</span>
-                  <span className="text-[12px] font-medium text-zinc-900 group-hover:text-zinc-600 transition-colors">Apply &rarr;</span>
+                  <span className="text-[12px] font-medium text-zinc-400 group-hover:text-zinc-600 transition-colors">&rarr;</span>
                 </div>
               </Link>
             ))}
