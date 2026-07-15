@@ -17,7 +17,8 @@ const navLinks = [
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+  const isLoading = status === "loading";
 
   return (
     <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-xl border-b border-zinc-100">
@@ -43,7 +44,9 @@ export default function Navbar() {
               </Link>
             ))}
             <div className="ml-3 pl-3 border-l border-zinc-200 flex items-center gap-2">
-              {session ? (
+              {isLoading ? (
+                <div className="w-[70px] h-[30px] bg-zinc-100 rounded-lg" />
+              ) : session ? (
                 <>
                   <Link
                     href="/saved"
@@ -71,14 +74,7 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center md:hidden">
-            {session ? (
-              <button
-                onClick={() => signOut({ callbackUrl: "/" })}
-                className="text-[13px] text-zinc-500 font-medium px-3 py-1.5 mr-2"
-              >
-                Sign Out
-              </button>
-            ) : (
+            {!isLoading && !session && (
               <Link
                 href="/auth/signin"
                 className="bg-zinc-900 text-white text-[13px] font-semibold px-3.5 py-1.5 rounded-lg mr-2"
