@@ -243,10 +243,14 @@ export async function GET(req: Request) {
   try {
     await connectDB();
 
-    // Clear all posts if ?clear=true
+    // Clear all posts if ?clear=true, or delete posts without AI summary
     const url = new URL(req.url);
     if (url.searchParams.get("clear") === "true") {
       await BlogPost.deleteMany({});
+    } else {
+      // Auto-clean old posts that have no AI summary (pre-Gemini data)
+      await BlogPost.deleteMany({ aiSummary: { $exists: false } });
+      await BlogPost.deleteMany({ aiSummary: null });
     }
 
     const [redditPosts, rssPosts, hnPosts] = await Promise.all([
