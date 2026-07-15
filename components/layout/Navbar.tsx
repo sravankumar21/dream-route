@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { GraduationCap, Menu, X } from "lucide-react";
+import { GraduationCap, Menu, X, Bookmark } from "lucide-react";
 import { useState } from "react";
+import { useSession, signOut } from "next-auth/react";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -16,6 +17,7 @@ const navLinks = [
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { data: session } = useSession();
 
   return (
     <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-xl border-b border-zinc-100">
@@ -23,7 +25,7 @@ export default function Navbar() {
         <div className="flex justify-between h-[60px]">
           <div className="flex items-center">
             <Link href="/" className="flex items-center gap-2.5 group">
-              <GraduationCap className="h-[22px] w-[22px] text-zinc-900 group-hover:text-blue-600 transition-colors duration-200" />
+              <GraduationCap className="h-[22px] w-[22px] text-zinc-900 transition-colors duration-200" />
               <span className="text-[17px] font-bold text-zinc-900 tracking-[-0.02em]">
                 DreamRoute
               </span>
@@ -40,23 +42,50 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
-            <div className="ml-3 pl-3 border-l border-zinc-200">
-              <Link
-                href="/auth/signin"
-                className="bg-zinc-900 text-white text-[13px] font-semibold px-4 py-2 rounded-lg hover:bg-zinc-800 transition-colors duration-150"
-              >
-                Sign In
-              </Link>
+            <div className="ml-3 pl-3 border-l border-zinc-200 flex items-center gap-2">
+              {session ? (
+                <>
+                  <Link
+                    href="/saved"
+                    className="text-[14px] text-zinc-500 hover:text-zinc-900 font-medium px-3 py-2 rounded-lg hover:bg-zinc-50 transition-all duration-150 flex items-center gap-1.5"
+                  >
+                    <Bookmark className="h-4 w-4" />
+                    Saved
+                  </Link>
+                  <button
+                    onClick={() => signOut({ callbackUrl: "/" })}
+                    className="text-[13px] text-zinc-500 hover:text-zinc-900 font-medium px-3 py-2 rounded-lg hover:bg-zinc-50 transition-colors duration-150"
+                  >
+                    Sign Out
+                  </button>
+                </>
+              ) : (
+                <Link
+                  href="/auth/signin"
+                  className="bg-zinc-900 text-white text-[13px] font-semibold px-4 py-2 rounded-lg hover:bg-zinc-800 transition-colors duration-150"
+                >
+                  Sign In
+                </Link>
+              )}
             </div>
           </div>
 
           <div className="flex items-center md:hidden">
-            <Link
-              href="/auth/signin"
-              className="bg-zinc-900 text-white text-[13px] font-semibold px-3.5 py-1.5 rounded-lg mr-2"
-            >
-              Sign In
-            </Link>
+            {session ? (
+              <button
+                onClick={() => signOut({ callbackUrl: "/" })}
+                className="text-[13px] text-zinc-500 font-medium px-3 py-1.5 mr-2"
+              >
+                Sign Out
+              </button>
+            ) : (
+              <Link
+                href="/auth/signin"
+                className="bg-zinc-900 text-white text-[13px] font-semibold px-3.5 py-1.5 rounded-lg mr-2"
+              >
+                Sign In
+              </Link>
+            )}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
               className="p-2 text-zinc-500 hover:text-zinc-900 rounded-lg hover:bg-zinc-50 transition-colors"
@@ -78,6 +107,15 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
+            {session && (
+              <Link
+                href="/saved"
+                onClick={() => setMobileOpen(false)}
+                className="block py-2.5 px-3 text-[15px] text-zinc-600 hover:text-zinc-900 font-medium rounded-lg hover:bg-zinc-50 transition-all"
+              >
+                Saved
+              </Link>
+            )}
           </div>
         )}
       </div>
