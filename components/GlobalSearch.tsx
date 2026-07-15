@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Search, ArrowRight, X, GraduationCap, BookOpen, Target, Award, Briefcase } from "lucide-react";
+import { Search, X } from "lucide-react";
 
 interface SearchResult {
   title: string;
@@ -12,107 +12,82 @@ interface SearchResult {
 }
 
 const tagColors: Record<string, string> = {
-  Careers: "bg-zinc-800 text-zinc-300",
-  Skills: "bg-zinc-800 text-zinc-400",
-  Exams: "bg-emerald-900/50 text-emerald-400",
-  Scholarships: "bg-amber-900/50 text-amber-400",
-  Blog: "bg-violet-900/50 text-violet-400",
-};
-
-const tagIcons: Record<string, React.ReactNode> = {
-  Careers: <Briefcase className="h-3 w-3" />,
-  Skills: <BookOpen className="h-3 w-3" />,
-  Exams: <Target className="h-3 w-3" />,
-  Scholarships: <Award className="h-3 w-3" />,
-  Blog: <BookOpen className="h-3 w-3" />,
+  Careers: "text-zinc-400",
+  Skills: "text-zinc-500",
+  Exams: "text-emerald-500",
+  Scholarships: "text-amber-500",
+  Blog: "text-violet-500",
 };
 
 const quickLinks = [
-  { label: "Software Engineer", tag: "Careers", url: "/careers/software-engineer", icon: <GraduationCap className="h-3.5 w-3.5" /> },
-  { label: "NEET", tag: "Exams", url: "/exams/neet", icon: <Target className="h-3.5 w-3.5" /> },
-  { label: "JEE Main", tag: "Exams", url: "/exams/jee-main", icon: <Target className="h-3.5 w-3.5" /> },
-  { label: "Scholarships", tag: "Scholarships", url: "/scholarships", icon: <Award className="h-3.5 w-3.5" /> },
-  { label: "Education Paths", tag: "Explore", url: "/education", icon: <BookOpen className="h-3.5 w-3.5" /> },
-  { label: "Data Scientist", tag: "Careers", url: "/careers/data-scientist", icon: <GraduationCap className="h-3.5 w-3.5" /> },
-  { label: "GATE", tag: "Exams", url: "/exams/gate", icon: <Target className="h-3.5 w-3.5" /> },
-  { label: "AI News", tag: "Blog", url: "/blog", icon: <BookOpen className="h-3.5 w-3.5" /> },
+  { label: "Software Engineer", tag: "Careers", url: "/careers/software-engineer" },
+  { label: "Data Scientist", tag: "Careers", url: "/careers/data-scientist" },
+  { label: "UI/UX Designer", tag: "Careers", url: "/careers/ui-ux-designer" },
+  { label: "NEET", tag: "Exams", url: "/exams/neet" },
+  { label: "JEE Main", tag: "Exams", url: "/exams/jee-main" },
+  { label: "TS EAMCET", tag: "Exams", url: "/exams/ts-eamcet" },
+  { label: "GATE", tag: "Exams", url: "/exams/gate" },
+  { label: "CAT", tag: "Exams", url: "/exams/cat" },
+  { label: "Scholarships", tag: "Scholarships", url: "/scholarships" },
+  { label: "Education Paths", tag: "Explore", url: "/education" },
+  { label: "AI News", tag: "Blog", url: "/blog" },
+  { label: "Workplace", tag: "Explore", url: "/workplace" },
 ];
 
 export default function GlobalSearch({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(false);
-  const [activeIndex, setActiveIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
-  // Auto-focus
   useEffect(() => {
     if (open) {
       setQuery("");
       setResults([]);
-      setActiveIndex(0);
-      setTimeout(() => inputRef.current?.focus(), 100);
+      setTimeout(() => inputRef.current?.focus(), 150);
     }
   }, [open]);
 
-  // Disable scroll when open
   useEffect(() => {
     if (open) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
     }
-    return () => {
-      document.body.style.overflow = "";
-    };
+    return () => { document.body.style.overflow = ""; };
   }, [open]);
 
-  // Search API
   useEffect(() => {
     if (query.length < 2) {
       setResults([]);
       return;
     }
-
     const timer = setTimeout(async () => {
       setLoading(true);
       try {
         const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
         const data = await res.json();
         setResults(data.results || []);
-        setActiveIndex(0);
       } catch {
         setResults([]);
       }
       setLoading(false);
     }, 200);
-
     return () => clearTimeout(timer);
   }, [query]);
 
-  const navigate = useCallback(
-    (url: string) => {
-      router.push(url);
-      onClose();
-    },
-    [router, onClose]
-  );
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && open) onClose();
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [open, onClose]);
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    const items = query.length >= 2 ? results : quickLinks;
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      setActiveIndex((i) => Math.min(i + 1, items.length - 1));
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      setActiveIndex((i) => Math.max(i - 1, 0));
-    } else if (e.key === "Enter" && items[activeIndex]) {
-      const item = items[activeIndex];
-      navigate("url" in item ? item.url : "/");
-    } else if (e.key === "Escape") {
-      onClose();
-    }
+  const navigate = (url: string) => {
+    router.push(url);
+    onClose();
   };
 
   if (!open) return null;
@@ -120,136 +95,126 @@ export default function GlobalSearch({ open, onClose }: { open: boolean; onClose
   const displayItems = query.length >= 2 ? results : quickLinks;
 
   return (
-    <div className="fixed inset-0 z-[100]" onKeyDown={handleKeyDown}>
+    <div className="fixed inset-0 z-[100]">
       {/* Backdrop */}
       <div
         className="absolute inset-0"
         style={{
           backdropFilter: "blur(20px)",
           WebkitBackdropFilter: "blur(20px)",
-          backgroundColor: "rgba(0, 0, 0, 0.55)",
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
         }}
         onClick={onClose}
       />
 
-      {/* Search panel */}
-      <div className="relative flex justify-center pt-[12vh] px-4">
-        <div className="w-full max-w-2xl">
-          {/* Input */}
-          <div className="bg-zinc-900/95 backdrop-blur-xl rounded-2xl border border-zinc-700/50 shadow-2xl overflow-hidden">
-            <div className="flex items-center gap-3 px-5 py-4">
-              <Search className="h-5 w-5 text-zinc-500 shrink-0" />
-              <input
-                ref={inputRef}
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search careers, colleges, exams, scholarships..."
-                className="flex-1 text-[16px] text-white placeholder:text-zinc-500 outline-none bg-transparent"
-              />
-              {query && (
-                <button
-                  onClick={() => setQuery("")}
-                  className="text-zinc-500 hover:text-zinc-300 transition-colors"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              )}
+      {/* Search panel — slides down from top */}
+      <div
+        className="absolute top-0 left-0 right-0 bg-white shadow-2xl"
+        style={{
+          height: "85vh",
+          animation: "searchSlideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+        }}
+      >
+        <div className="max-w-3xl mx-auto h-full flex flex-col">
+          {/* Search input */}
+          <div className="flex items-center gap-4 px-8 pt-8 pb-5 border-b border-zinc-100">
+            <Search className="h-5 w-5 text-zinc-400 shrink-0" />
+            <input
+              ref={inputRef}
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search careers, colleges, exams, scholarships..."
+              className="flex-1 text-[20px] sm:text-[24px] text-zinc-900 placeholder:text-zinc-300 outline-none bg-transparent font-light"
+            />
+            {query && (
               <button
-                onClick={onClose}
-                className="text-[11px] text-zinc-500 border border-zinc-700 rounded px-1.5 py-0.5 hover:text-zinc-300 hover:border-zinc-500 transition-colors"
+                onClick={() => setQuery("")}
+                className="text-zinc-300 hover:text-zinc-500 transition-colors"
               >
-                ESC
+                <X className="h-5 w-5" />
               </button>
-            </div>
+            )}
+            <button
+              onClick={onClose}
+              className="text-[13px] text-zinc-400 hover:text-zinc-600 font-medium transition-colors"
+            >
+              Cancel
+            </button>
+          </div>
 
-            {/* Divider */}
-            <div className="h-px bg-zinc-700/50" />
-
-            {/* Results */}
-            <div className="max-h-[50vh] overflow-y-auto">
-              {query.length < 2 ? (
-                <div className="p-4">
-                  <p className="text-[11px] font-medium text-zinc-500 uppercase tracking-wider mb-3 px-1">
-                    Quick access
-                  </p>
-                  <div className="grid grid-cols-2 gap-1.5">
-                    {quickLinks.map((link, i) => (
-                      <button
-                        key={link.label}
-                        onClick={() => navigate(link.url)}
-                        onMouseEnter={() => setActiveIndex(i)}
-                        className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-colors ${
-                          i === activeIndex ? "bg-zinc-800" : "hover:bg-zinc-800/50"
-                        }`}
-                      >
-                        <div className="w-8 h-8 rounded-lg bg-zinc-800 flex items-center justify-center text-zinc-400 shrink-0">
-                          {link.icon}
-                        </div>
-                        <div className="min-w-0">
-                          <p className="text-[13px] font-medium text-zinc-200 truncate">{link.label}</p>
-                          <p className="text-[11px] text-zinc-500">{link.tag}</p>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
+          {/* Content */}
+          <div className="flex-1 overflow-y-auto px-8 py-6">
+            {query.length < 2 ? (
+              <div>
+                <p className="text-[11px] font-semibold text-zinc-300 uppercase tracking-wider mb-4">
+                  Quick Links
+                </p>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-8 gap-y-1">
+                  {quickLinks.map((link) => (
+                    <button
+                      key={link.label}
+                      onClick={() => navigate(link.url)}
+                      className="flex items-center gap-3 py-3 text-left group"
+                    >
+                      <div className="min-w-0">
+                        <p className="text-[15px] text-zinc-700 group-hover:text-zinc-900 font-medium truncate transition-colors">
+                          {link.label}
+                        </p>
+                        <p className={`text-[12px] ${tagColors[link.tag] || "text-zinc-400"}`}>
+                          {link.tag}
+                        </p>
+                      </div>
+                    </button>
+                  ))}
                 </div>
-              ) : loading ? (
-                <div className="px-5 py-10 text-center">
-                  <p className="text-[13px] text-zinc-500">Searching...</p>
-                </div>
-              ) : results.length === 0 ? (
-                <div className="px-5 py-10 text-center">
-                  <p className="text-[13px] text-zinc-500">No results for &ldquo;{query}&rdquo;</p>
-                </div>
-              ) : (
-                <div className="p-2">
+              </div>
+            ) : loading ? (
+              <div className="py-16 text-center">
+                <p className="text-[14px] text-zinc-300">Searching...</p>
+              </div>
+            ) : results.length === 0 ? (
+              <div className="py-16 text-center">
+                <p className="text-[14px] text-zinc-300">No results for &ldquo;{query}&rdquo;</p>
+              </div>
+            ) : (
+              <div>
+                <p className="text-[11px] font-semibold text-zinc-300 uppercase tracking-wider mb-4">
+                  Results
+                </p>
+                <div className="space-y-1">
                   {results.map((result, i) => (
                     <button
                       key={`${result.title}-${result.tag}-${i}`}
                       onClick={() => navigate(result.url)}
-                      onMouseEnter={() => setActiveIndex(i)}
-                      className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl text-left transition-colors ${
-                        i === activeIndex ? "bg-zinc-800" : "hover:bg-zinc-800/50"
-                      }`}
+                      className="w-full flex items-center justify-between gap-4 py-3.5 px-3 -mx-3 rounded-xl text-left hover:bg-zinc-50 transition-colors group"
                     >
-                      <div className="w-8 h-8 rounded-lg bg-zinc-800 flex items-center justify-center text-zinc-400 shrink-0">
-                        {tagIcons[result.tag] || <Search className="h-3 w-3" />}
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center gap-2">
-                          <span className="text-[13px] font-medium text-zinc-200 truncate">
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2.5">
+                          <span className="text-[15px] text-zinc-700 group-hover:text-zinc-900 font-medium truncate transition-colors">
                             {result.title}
                           </span>
-                          <span className={`text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded shrink-0 ${tagColors[result.tag] || "bg-zinc-800 text-zinc-400"}`}>
+                          <span className={`text-[11px] font-medium ${tagColors[result.tag] || "text-zinc-400"}`}>
                             {result.tag}
                           </span>
                         </div>
-                        <p className="text-[12px] text-zinc-500 truncate mt-0.5">{result.description}</p>
+                        <p className="text-[13px] text-zinc-400 truncate mt-0.5">{result.description}</p>
                       </div>
-                      <ArrowRight className="h-3.5 w-3.5 text-zinc-600 shrink-0" />
                     </button>
                   ))}
                 </div>
-              )}
-            </div>
-
-            {/* Footer */}
-            <div className="h-px bg-zinc-700/50" />
-            <div className="px-5 py-2.5 flex items-center gap-4 text-[11px] text-zinc-500">
-              <span className="flex items-center gap-1">
-                <kbd className="px-1 py-0.5 bg-zinc-800 rounded text-[10px] text-zinc-400">↑↓</kbd> navigate
-              </span>
-              <span className="flex items-center gap-1">
-                <kbd className="px-1 py-0.5 bg-zinc-800 rounded text-[10px] text-zinc-400">↵</kbd> select
-              </span>
-              <span className="flex items-center gap-1">
-                <kbd className="px-1 py-0.5 bg-zinc-800 rounded text-[10px] text-zinc-400">esc</kbd> close
-              </span>
-            </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
+
+      <style>{`
+        @keyframes searchSlideDown {
+          from { transform: translateY(-100%); opacity: 0; }
+          to { transform: translateY(0); opacity: 1; }
+        }
+      `}</style>
     </div>
   );
 }
