@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ExternalLink, ArrowUpRight, MessageSquare, TrendingUp } from "lucide-react";
+import { ArrowUpRight, MessageSquare, TrendingUp } from "lucide-react";
 import { connectDB } from "@/lib/db";
 import BlogPost from "@/models/BlogPost";
 
@@ -16,16 +16,17 @@ const categories = [
   { id: "industry", label: "Industry" },
 ];
 
-function timeAgo(date: Date): string {
-  const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
-  if (seconds < 60) return "just now";
-  const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) return `${minutes}m ago`;
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours}h ago`;
-  const days = Math.floor(hours / 24);
-  if (days < 7) return `${days}d ago`;
-  return date.toLocaleDateString("en-IN", { day: "numeric", month: "short" });
+function dateLabel(date: Date): string {
+  const now = new Date();
+  const d = new Date(date);
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const postDay = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const diff = Math.floor((today.getTime() - postDay.getTime()) / 86400000);
+
+  if (diff === 0) return "Today";
+  if (diff === 1) return "Yesterday";
+  if (diff < 7) return `${diff} days ago`;
+  return d.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
 }
 
 function sourceColor(source: string): string {
@@ -47,6 +48,11 @@ function categoryColor(cat: string): string {
   }
 }
 
+function getDateKey(date: Date): string {
+  const d = new Date(date);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
 export default async function BlogPage({
   searchParams,
 }: {
@@ -63,8 +69,17 @@ export default async function BlogPage({
 
   const posts = await BlogPost.find(filter)
     .sort({ publishedAt: -1 })
-    .limit(50)
+    .limit(20)
     .lean();
+
+  // Group by date
+  const grouped: Record<string, typeof posts> = {};
+  for (const post of posts) {
+    const key = getDateKey(new Date(post.publishedAt));
+    if (!grouped[key]) grouped[key] = [];
+    grouped[key].push(post);
+  }
+  const dateKeys = Object.keys(grouped).sort((a, b) => b.localeCompare(a));
 
   return (
     <div className="min-h-screen bg-zinc-50">
@@ -103,57 +118,65 @@ export default async function BlogPage({
             <p className="text-[13px] text-zinc-400">Posts will appear after the first sync runs.</p>
           </div>
         ) : (
-          <div className="space-y-3">
-            {posts.map((post) => (
-              <a
-                key={post._id?.toString()}
-                href={post.sourceUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block bg-white rounded-2xl border border-zinc-200 p-5 sm:p-6 hover:border-zinc-300 hover:shadow-[0_2px_12px_rgba(0,0,0,0.04)] transition-all duration-200 group"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-center gap-2 mb-2">
-                      <span className={`text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full border ${sourceColor(post.source)}`}>
-                        {post.sourceName}
-                      </span>
-                      <span className={`text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full border ${categoryColor(post.category)}`}>
-                        {post.category.replace("-", " ")}
-                      </span>
-                      <span className="text-[12px] text-zinc-400">{timeAgo(new Date(post.publishedAt))}</span>
-                    </div>
+          <div className="space-y-8">
+            {dateKeys.map((key) => (
+              <div key={key}>
+                <p className="text-[12px] font-semibold text-zinc-400 uppercase tracking-wider mb-3">
+                  {dateLabel(new Date(key + "T00:00:00"))}
+                </p>
+                <div className="space-y-2">
+                  {grouped[key].map((post) => (
+                    <a
+                      key={post._id?.toString()}
+                      href={post.sourceUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block bg-white rounded-2xl border border-zinc-200 p-5 sm:p-6 hover:border-zinc-300 hover:shadow-[0_2px_12px_rgba(0,0,0,0.04)] transition-all duration-200 group"
+                    >
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="min-w-0 flex-1">
+                          <div className="flex flex-wrap items-center gap-2 mb-2">
+                            <span className={`text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full border ${sourceColor(post.source)}`}>
+                              {post.sourceName}
+                            </span>
+                            <span className={`text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full border ${categoryColor(post.category)}`}>
+                              {post.category.replace("-", " ")}
+                            </span>
+                          </div>
 
-                    <h3 className="text-[16px] font-bold text-zinc-900 tracking-[-0.01em] group-hover:text-zinc-900 transition-colors mb-1.5">
-                      {post.title}
-                    </h3>
+                          <h3 className="text-[16px] font-bold text-zinc-900 tracking-[-0.01em] group-hover:text-zinc-600 transition-colors mb-1.5">
+                            {post.title}
+                          </h3>
 
-                    {post.summary && post.summary !== post.title && (
-                      <p className="text-[13px] text-zinc-500 line-clamp-2 mb-3">
-                        {post.summary}
-                      </p>
-                    )}
+                          {post.summary && post.summary !== post.title && (
+                            <p className="text-[13px] text-zinc-500 line-clamp-2 mb-3">
+                              {post.summary}
+                            </p>
+                          )}
 
-                    <div className="flex items-center gap-4 text-[12px] text-zinc-400">
-                      {post.score > 0 && (
-                        <span className="flex items-center gap-1">
-                          <TrendingUp className="h-3 w-3" />
-                          {post.score}
-                        </span>
-                      )}
-                      {post.comments > 0 && (
-                        <span className="flex items-center gap-1">
-                          <MessageSquare className="h-3 w-3" />
-                          {post.comments}
-                        </span>
-                      )}
-                      <span className="text-zinc-400">by {post.author}</span>
-                    </div>
-                  </div>
+                          <div className="flex items-center gap-4 text-[12px] text-zinc-400">
+                            {post.score > 0 && (
+                              <span className="flex items-center gap-1">
+                                <TrendingUp className="h-3 w-3" />
+                                {post.score}
+                              </span>
+                            )}
+                            {post.comments > 0 && (
+                              <span className="flex items-center gap-1">
+                                <MessageSquare className="h-3 w-3" />
+                                {post.comments}
+                              </span>
+                            )}
+                            <span>by {post.author}</span>
+                          </div>
+                        </div>
 
-                  <ArrowUpRight className="h-4 w-4 text-zinc-300 group-hover:text-zinc-500 shrink-0 mt-1 transition-colors" />
+                        <ArrowUpRight className="h-4 w-4 text-zinc-300 group-hover:text-zinc-500 shrink-0 mt-1 transition-colors" />
+                      </div>
+                    </a>
+                  ))}
                 </div>
-              </a>
+              </div>
             ))}
           </div>
         )}

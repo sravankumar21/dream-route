@@ -249,12 +249,16 @@ export async function GET(req: Request) {
       }
     }
 
-    // Keep only last 200 posts
+    // Delete posts older than 7 days
+    const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    await BlogPost.deleteMany({ publishedAt: { $lt: sevenDaysAgo } });
+
+    // Keep only last 60 posts as a safety cap
     const totalCount = await BlogPost.countDocuments();
-    if (totalCount > 200) {
+    if (totalCount > 60) {
       const oldest = await BlogPost.find()
         .sort({ publishedAt: 1 })
-        .limit(totalCount - 200)
+        .limit(totalCount - 60)
         .select("_id");
       await BlogPost.deleteMany({ _id: { $in: oldest.map((p) => p._id) } });
     }
