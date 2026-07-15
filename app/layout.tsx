@@ -5,6 +5,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { Providers } from "./providers";
 import { SavedCareersProvider } from "@/components/SavedCareersProvider";
+import ErrorBoundary from "@/components/ErrorBoundary";
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -32,7 +33,9 @@ export default function RootLayout({
           <SavedCareersProvider>
             <div className="flex flex-col min-h-screen">
               <Navbar />
-              <main className="flex-grow">{children}</main>
+              <main className="flex-grow">
+                <ErrorBoundary>{children}</ErrorBoundary>
+              </main>
               <Footer />
             </div>
           </SavedCareersProvider>

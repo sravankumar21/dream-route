@@ -2,15 +2,15 @@
 
 import { useState } from "react";
 import { ChevronDown, ExternalLink } from "lucide-react";
-import { financeArticles, financeCategories } from "@/data/finance";
+import { workplaceArticles, workplaceCategories } from "@/data/workplace";
 
 export default function FinancePage() {
   const [activeCategory, setActiveCategory] = useState("all");
   const [expandedArticle, setExpandedArticle] = useState<string | null>(null);
 
   const filtered = activeCategory === "all"
-    ? financeArticles
-    : financeArticles.filter((a) => a.category === activeCategory);
+    ? workplaceArticles
+    : workplaceArticles.filter((a) => a.category === activeCategory);
 
   return (
     <div className="min-h-screen bg-zinc-50">
@@ -37,7 +37,7 @@ export default function FinancePage() {
           >
             All
           </button>
-          {financeCategories.map((cat) => (
+          {workplaceCategories.map((cat) => (
             <button
               key={cat.id}
               onClick={() => setActiveCategory(cat.id)}
@@ -105,7 +105,7 @@ export default function FinancePage() {
                               href={link.url}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="flex items-center gap-1.5 text-[13px] text-blue-600 hover:text-blue-700 font-medium transition-colors"
+                              className="flex items-center gap-1.5 text-[13px] text-zinc-600 hover:text-zinc-900 font-medium transition-colors"
                             >
                               <ExternalLink className="h-3 w-3 shrink-0" />
                               {link.label}

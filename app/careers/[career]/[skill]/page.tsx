@@ -16,7 +16,6 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { careers, getCareerBySlug, getSkillBySlug } from "@/data/careers";
-import { getResourcesForSkill } from "@/data/resources";
 
 export function generateStaticParams() {
   const params: { career: string; skill: string }[] = [];
@@ -83,13 +82,8 @@ export default async function SkillDetailPage({
     notFound();
   }
 
-  const curatedResources = getResourcesForSkill(skillId);
-  const allResources = [...skill.resources, ...curatedResources];
-
-  const seen = new Set<string>();
-  const uniqueResources = allResources.filter((r) => {
-    if (seen.has(r.url)) return false;
-    seen.add(r.url);
+  const uniqueResources = skill.resources.filter((r, i, arr) => {
+    if (arr.findIndex((x) => x.url === r.url) !== i) return false;
     return true;
   });
 
@@ -237,7 +231,7 @@ export default async function SkillDetailPage({
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <h3 className="text-[14px] font-semibold text-zinc-900 group-hover:text-blue-600 transition-colors duration-150">
+                      <h3 className="text-[14px] font-semibold text-zinc-900 group-hover:text-zinc-900 transition-colors duration-150">
                         {resource.title}
                       </h3>
                       <ExternalLink className="h-3 w-3 text-zinc-300 flex-shrink-0" />

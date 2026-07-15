@@ -106,7 +106,7 @@ export default function ScholarshipsPage() {
                   <ul className="space-y-1">
                     {scholarship.benefits.map((item, i) => (
                       <li key={i} className="text-[12px] text-zinc-600 flex items-start gap-1.5">
-                        <span className="text-blue-500 mt-0.5">&#8226;</span>
+                        <span className="text-zinc-400 mt-0.5">&#8226;</span>
                         {item}
                       </li>
                     ))}
@@ -122,7 +122,7 @@ export default function ScholarshipsPage() {
                   href={scholarship.applicationLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 text-[13px] font-semibold text-blue-600 hover:text-blue-700 transition-colors"
+                  className="flex items-center gap-1.5 text-[13px] font-semibold text-zinc-600 hover:text-zinc-900 transition-colors"
                 >
                   Apply now
                   <ExternalLink className="h-3.5 w-3.5" />

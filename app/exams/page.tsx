@@ -30,7 +30,7 @@ export default function ExamsPage() {
             >
               <div className="flex items-start justify-between mb-3">
                 <div>
-                  <h2 className="text-[18px] font-bold text-zinc-900 tracking-[-0.01em] group-hover:text-blue-600 transition-colors">
+                  <h2 className="text-[18px] font-bold text-zinc-900 tracking-[-0.01em] group-hover:text-zinc-900 transition-colors">
                     {exam.name}
                   </h2>
                   <p className="text-[13px] text-zinc-400 mt-0.5">{exam.conductedBy}</p>

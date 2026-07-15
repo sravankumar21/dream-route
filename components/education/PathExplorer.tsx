@@ -471,7 +471,7 @@ export default function PathExplorer() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 onClick={(e) => e.stopPropagation()}
-                                className="flex items-center gap-1.5 text-[12px] text-blue-600 hover:text-blue-700 font-medium transition-colors"
+                                className="flex items-center gap-1.5 text-[12px] text-zinc-600 hover:text-zinc-900 font-medium transition-colors"
                               >
                                 <ExternalLink className="h-3 w-3 shrink-0" />
                                 {link.label}

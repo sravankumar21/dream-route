@@ -33,7 +33,7 @@ function sourceColor(source: string): string {
   switch (source) {
     case "reddit": return "bg-orange-50 text-orange-700 border-orange-200";
     case "hn": return "bg-amber-50 text-amber-700 border-amber-200";
-    case "rss": return "bg-blue-50 text-blue-700 border-blue-200";
+    case "rss": return "bg-sky-50 text-sky-700 border-sky-200";
     default: return "bg-zinc-50 text-zinc-700 border-zinc-200";
   }
 }

@@ -272,7 +272,7 @@ export default async function CareerDetailPage({
                     {index + 1}
                   </span>
                   <div>
-                    <h3 className="text-[14px] font-semibold text-zinc-900 group-hover:text-blue-600 transition-colors duration-150">
+                    <h3 className="text-[14px] font-semibold text-zinc-900 group-hover:text-zinc-900 transition-colors duration-150">
                       {skill.name}
                     </h3>
                     <p className="text-[13px] text-zinc-400 mt-0.5">{skill.whyItMatters}</p>

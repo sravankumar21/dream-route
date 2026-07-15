@@ -90,7 +90,7 @@ export default function Home() {
             {howItWorks.map((item) => (
               <Link key={item.step} href={item.href} className="group">
                 <div className="text-[13px] font-bold text-zinc-300 mb-3">{item.step}</div>
-                <h3 className="text-[16px] font-bold text-zinc-900 mb-2 tracking-[-0.01em] group-hover:text-blue-600 transition-colors">{item.title}</h3>
+                <h3 className="text-[16px] font-bold text-zinc-900 mb-2 tracking-[-0.01em] group-hover:text-zinc-900 transition-colors">{item.title}</h3>
                 <p className="text-[14px] text-zinc-500 leading-relaxed">{item.description}</p>
               </Link>
             ))}
@@ -125,7 +125,7 @@ export default function Home() {
                 <div className="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center mb-3">
                   <item.icon className="h-5 w-5 text-zinc-600" />
                 </div>
-                <h3 className="text-[16px] font-bold text-zinc-900 tracking-[-0.01em] group-hover:text-blue-600 transition-colors">
+                <h3 className="text-[16px] font-bold text-zinc-900 tracking-[-0.01em] group-hover:text-zinc-900 transition-colors">
                   {item.label}
                 </h3>
                 <p className="text-[14px] text-zinc-500 mt-1 flex-1">{item.desc}</p>
@@ -165,14 +165,14 @@ export default function Home() {
                   <Target className="h-4 w-4 text-zinc-400" />
                   <span className="text-[12px] text-zinc-400 font-medium">{exam.totalMarks} marks</span>
                 </div>
-                <h3 className="text-[16px] font-bold text-zinc-900 tracking-[-0.01em] group-hover:text-blue-600 transition-colors">
+                <h3 className="text-[16px] font-bold text-zinc-900 tracking-[-0.01em] group-hover:text-zinc-900 transition-colors">
                   {exam.name}
                 </h3>
                 <p className="text-[13px] text-zinc-500 mt-1 mb-3 flex-1 line-clamp-2">{exam.conductedBy}</p>
                 <div className="border-t border-zinc-100 pt-3">
                   <p className="text-[11px] text-zinc-400 mb-1">Top target</p>
                   <p className="text-[13px] font-semibold text-zinc-900">Rank {exam.rankTargets[0].rankRange}</p>
-                  <p className="text-[12px] text-blue-600">Score {exam.rankTargets[0].scoreRange}</p>
+                  <p className="text-[12px] text-zinc-600">Score {exam.rankTargets[0].scoreRange}</p>
                 </div>
               </Link>
             ))}
