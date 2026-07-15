@@ -1,0 +1,62 @@
+import {
+  Monitor,
+  BarChart3,
+  Palette,
+  Shield,
+  Cloud,
+  ClipboardList,
+  Bot,
+  Hospital,
+  Stethoscope,
+  Pill,
+  Brain,
+  TrendingUp,
+  Megaphone,
+  Rocket,
+  Paintbrush,
+  Film,
+  Smartphone,
+  Landmark,
+  Building2,
+  BookOpen,
+  Settings,
+  HardHat,
+  Camera,
+  Scale,
+  Lamp,
+  type LucideIcon,
+} from "lucide-react";
+
+export const iconMap: Record<string, LucideIcon> = {
+  monitor: Monitor,
+  "bar-chart-3": BarChart3,
+  palette: Palette,
+  shield: Shield,
+  cloud: Cloud,
+  "clipboard-list": ClipboardList,
+  bot: Bot,
+  hospital: Hospital,
+  stethoscope: Stethoscope,
+  pill: Pill,
+  brain: Brain,
+  "trending-up": TrendingUp,
+  megaphone: Megaphone,
+  rocket: Rocket,
+  paintbrush: Paintbrush,
+  film: Film,
+  smartphone: Smartphone,
+  landmark: Landmark,
+  "building-2": Building2,
+  "book-open": BookOpen,
+  settings: Settings,
+  "hard-hat": HardHat,
+  camera: Camera,
+  scale: Scale,
+  lamp: Lamp,
+};
+
+export function CareerIcon({ name, className }: { name: string; className?: string }) {
+  const Icon = iconMap[name];
+  if (!Icon) return null;
+  return <Icon className={className} />;
+}

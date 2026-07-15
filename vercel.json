@@ -1,0 +1,16 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/sync-courses",
+      "schedule": "0 2 * * 0"
+    },
+    {
+      "path": "/api/cron/sync-videos",
+      "schedule": "0 3 * * 0"
+    },
+    {
+      "path": "/api/cron/sync-blog",
+      "schedule": "0 8 * * *"
+    }
+  ]
+}

@@ -1,0 +1,815 @@
+export interface EducationLink {
+  label: string;
+  url: string;
+}
+
+export interface EducationNode {
+  id: string;
+  label: string;
+  subtitle?: string;
+  fees?: { govt?: string; private?: string };
+  duration?: string;
+  type: "govt" | "private" | "residential" | "semi-govt";
+  eligibility?: string;
+  entranceExam?: string;
+  note?: string;
+  careers?: string[];
+  careerSlug?: string;
+  links?: EducationLink[];
+  children?: EducationNode[];
+}
+
+export interface StateData {
+  id: string;
+  label: string;
+  available: boolean;
+  tree: EducationNode[];
+}
+
+// ─────────────────────────────────────────────────────────────
+// TELANGANA
+// ─────────────────────────────────────────────────────────────
+
+const telanganaAfter10: EducationNode[] = [
+  // ── INTERMEDIATE ──
+  {
+    id: "inter-mpc",
+    label: "Intermediate — MPC",
+    subtitle: "Maths, Physics, Chemistry",
+    fees: { govt: "Free — ₹10,000/yr", private: "₹40,000 — ₹1,50,000/yr" },
+    duration: "2 years (Class 11-12)",
+    type: "govt",
+    eligibility: "SSC / Class 10 pass",
+    entranceExam: "TS EAMCET (for B.Tech admission)",
+    links: [
+      { label: "TS Board of Intermediate Education", url: "https://bie.telangana.gov.in" },
+      { label: "TS EAMCET — Official Site", url: "https://tseamcet.nic.in" },
+    ],
+    children: [
+      {
+        id: "btech-cse",
+        label: "B.Tech CSE",
+        subtitle: "Computer Science & Engineering",
+        fees: { govt: "₹10,000 — ₹50,000/yr", private: "₹80,000 — ₹5,00,000/yr" },
+        duration: "4 years",
+        type: "govt",
+        eligibility: "MPC + TS EAMCET / JEE Main",
+        entranceExam: "TS EAMCET, JEE Main",
+        careers: ["Software Engineer", "Data Scientist", "AI/ML Engineer", "Product Manager"],
+        links: [
+          { label: "JEE Main — Official Site", url: "https://jeemain.nta.ac.in" },
+          { label: "TS EAMCET — Official Site", url: "https://tseamcet.nic.in" },
+          { label: "JoSAA Counselling", url: "https://josaa.nic.in" },
+        ],
+        children: [
+          {
+            id: "btech-cse-direct",
+            label: "Direct to Career",
+            subtitle: "Start working after B.Tech",
+            duration: "Immediate",
+            type: "govt",
+            careers: ["Software Engineer", "Data Scientist", "AI/ML Engineer", "Product Manager"],
+            children: [
+              { id: "career-se", label: "Software Engineer", subtitle: "₹4-60+ LPA", type: "govt", careerSlug: "software-engineer", careers: ["Google", "Microsoft", "Amazon", "TCS", "Infosys", "Startups"] },
+              { id: "career-ds", label: "Data Scientist", subtitle: "₹6-70+ LPA", type: "govt", careerSlug: "data-scientist", careers: ["Flipkart", "Swiggy", "Razorpay", "MuSigma"] },
+              { id: "career-aiml", label: "AI/ML Engineer", subtitle: "₹8-100+ LPA", type: "govt", careerSlug: "ai-ml-engineer", careers: ["Google", "Microsoft", "Samsung R&D", "Research Labs"] },
+            ],
+          },
+          {
+            id: "mtech-cse",
+            label: "M.Tech CSE",
+            subtitle: "Master of Technology — specialization",
+            fees: { govt: "₹10,000 — ₹40,000/yr", private: "₹50,000 — ₹3,00,000/yr" },
+            duration: "2 years",
+            type: "govt",
+            eligibility: "B.Tech + GATE score",
+            entranceExam: "GATE",
+            careers: ["Senior Engineer", "Tech Lead", "Research Scientist", "Professor"],
+            links: [
+              { label: "GATE — Official Site", url: "https://gate.iitd.ac.in" },
+              { label: "CCMT Counselling", url: "https://ccmt.nic.in" },
+            ],
+            children: [
+              { id: "career-tech-lead", label: "Tech Lead / Architect", subtitle: "₹20-80+ LPA", type: "govt", careers: ["Google", "Microsoft", "Amazon", "Flipkart"] },
+              { id: "career-research", label: "Research Scientist", subtitle: "₹15-50+ LPA", type: "govt", careers: ["IISc", "IITs", "Google Research", "Microsoft Research"] },
+              { id: "career-professor", label: "Professor / Academic", subtitle: "₹8-25+ LPA", type: "govt", careers: ["IITs", "NITs", "Universities", "Research Labs"] },
+            ],
+          },
+          {
+            id: "mba-after-btech",
+            label: "MBA",
+            subtitle: "Master of Business Administration",
+            fees: { govt: "₹50,000 — ₹5,00,000/yr", private: "₹5,00,000 — ₹25,00,000/yr" },
+            duration: "2 years",
+            type: "private",
+            eligibility: "Bachelor's degree + CAT/XAT/GMAT",
+            entranceExam: "CAT, XAT, GMAT, CMAT",
+            careers: ["Product Manager", "Business Analyst", "Consultant", "Marketing Manager"],
+            links: [
+              { label: "CAT — Official Site", url: "https://iimcat.ac.in" },
+              { label: "XAT — Official Site", url: "https://xatonline.in" },
+            ],
+            children: [
+              { id: "career-pm", label: "Product Manager", subtitle: "₹18-35+ LPA", type: "govt", careerSlug: "product-manager", careers: ["Google", "Microsoft", "Amazon", "Flipkart"] },
+              { id: "career-consultant", label: "Management Consultant", subtitle: "₹12-40+ LPA", type: "govt", careers: ["McKinsey", "BCG", "Bain", "Deloitte"] },
+            ],
+          },
+          {
+            id: "ms-abroad",
+            label: "MS (Abroad)",
+            subtitle: "Master of Science — US/Europe/Canada",
+            fees: { govt: "—", private: "$20,000 — $60,000 total" },
+            duration: "1.5-2 years",
+            type: "private",
+            eligibility: "B.Tech + GRE/TOEFL/IELTS",
+            entranceExam: "GRE, TOEFL, IELTS",
+            careers: ["Software Engineer (Abroad)", "Research Scientist", "PhD"],
+            links: [
+              { label: "GRE — Official Site", url: "https://www.ets.org/gre" },
+              { label: "TOEFL — Official Site", url: "https://www.ets.org/toefl" },
+            ],
+          },
+        ],
+      },
+      {
+        id: "btech-cse-aiml",
+        label: "B.Tech CSE (AI/ML)",
+        subtitle: "Artificial Intelligence & Machine Learning",
+        fees: { govt: "₹15,000 — ₹60,000/yr", private: "₹1,00,000 — ₹6,00,000/yr" },
+        duration: "4 years",
+        type: "govt",
+        eligibility: "MPC + TS EAMCET / JEE Main",
+        entranceExam: "TS EAMCET, JEE Main",
+        careers: ["AI Engineer", "ML Engineer", "Data Scientist", "Research Scientist"],
+      },
+      {
+        id: "btech-ece",
+        label: "B.Tech ECE",
+        subtitle: "Electronics & Communication Engineering",
+        fees: { govt: "₹10,000 — ₹50,000/yr", private: "₹80,000 — ₹4,00,000/yr" },
+        duration: "4 years",
+        type: "govt",
+        eligibility: "MPC + TS EAMCET / JEE Main",
+        entranceExam: "TS EAMCET, JEE Main",
+        careers: ["VLSI Design Engineer", "Embedded Systems", "Telecom Engineer", "IoT Developer"],
+      },
+      {
+        id: "btech-eee",
+        label: "B.Tech EEE",
+        subtitle: "Electrical & Electronics Engineering",
+        fees: { govt: "₹10,000 — ₹50,000/yr", private: "₹80,000 — ₹4,00,000/yr" },
+        duration: "4 years",
+        type: "govt",
+        eligibility: "MPC + TS EAMCET / JEE Main",
+        entranceExam: "TS EAMCET, JEE Main",
+        careers: ["Power Systems Engineer", "Electrical Design", "Renewable Energy"],
+      },
+      {
+        id: "btech-me",
+        label: "B.Tech ME",
+        subtitle: "Mechanical Engineering",
+        fees: { govt: "₹10,000 — ₹50,000/yr", private: "₹80,000 — ₹4,00,000/yr" },
+        duration: "4 years",
+        type: "govt",
+        eligibility: "MPC + TS EAMCET / JEE Main",
+        entranceExam: "TS EAMCET, JEE Main",
+        careers: ["Design Engineer", "Manufacturing", "Automotive", "Robotics"],
+      },
+      {
+        id: "btech-ce",
+        label: "B.Tech CE",
+        subtitle: "Civil Engineering",
+        fees: { govt: "₹10,000 — ₹50,000/yr", private: "₹80,000 — ₹3,50,000/yr" },
+        duration: "4 years",
+        type: "govt",
+        eligibility: "MPC + TS EAMCET / JEE Main",
+        entranceExam: "TS EAMCET, JEE Main",
+        careers: ["Structural Engineer", "Project Manager", "Government (PWD)", "Infrastructure"],
+      },
+      {
+        id: "btech-it",
+        label: "B.Tech IT",
+        subtitle: "Information Technology",
+        fees: { govt: "₹10,000 — ₹50,000/yr", private: "₹80,000 — ₹4,50,000/yr" },
+        duration: "4 years",
+        type: "govt",
+        eligibility: "MPC + TS EAMCET / JEE Main",
+        entranceExam: "TS EAMCET, JEE Main",
+        careers: ["Software Developer", "Web Developer", "Cloud Engineer", "DevOps Engineer"],
+      },
+      {
+        id: "bsc-cs",
+        label: "B.Sc Computer Science",
+        subtitle: "3-year alternative to B.Tech",
+        fees: { govt: "₹5,000 — ₹20,000/yr", private: "₹30,000 — ₹1,50,000/yr" },
+        duration: "3 years",
+        type: "govt",
+        eligibility: "MPC",
+        careers: ["Software Developer", "IT Support", "Freelancing"],
+      },
+      {
+        id: "bca",
+        label: "BCA",
+        subtitle: "Bachelor of Computer Applications",
+        fees: { govt: "₹5,000 — ₹25,000/yr", private: "₹40,000 — ₹2,00,000/yr" },
+        duration: "3 years",
+        type: "private",
+        eligibility: "MPC / Any stream with Maths",
+        careers: ["Software Developer", "Web Developer", "App Developer"],
+      },
+      {
+        id: "barch",
+        label: "B.Arch",
+        subtitle: "Architecture",
+        fees: { govt: "₹15,000 — ₹60,000/yr", private: "₹1,00,000 — ₹3,50,000/yr" },
+        duration: "5 years",
+        type: "govt",
+        eligibility: "MPC + NATA / JEE Paper 2",
+        entranceExam: "NATA, JEE Main Paper 2",
+        careers: ["Architect", "Urban Planner", "Interior Designer"],
+      },
+    ],
+  },
+  {
+    id: "inter-bpc",
+    label: "Intermediate — BPC",
+    subtitle: "Biology, Physics, Chemistry",
+    fees: { govt: "Free — ₹10,000/yr", private: "₹40,000 — ₹1,50,000/yr" },
+    duration: "2 years (Class 11-12)",
+    type: "govt",
+    eligibility: "SSC / Class 10 pass",
+    entranceExam: "TS EAMCET (for Medical/Engg), NEET UG",
+    links: [
+      { label: "NEET — Official Site", url: "https://nta.ac.in/NEET" },
+      { label: "TS EAMCET — Official Site", url: "https://tseamcet.nic.in" },
+    ],
+    children: [
+      {
+        id: "mbbs",
+        label: "MBBS",
+        subtitle: "Bachelor of Medicine & Surgery",
+        fees: { govt: "₹10,000 — ₹50,000/yr", private: "₹8,00,000 — ₹25,00,000/yr" },
+        duration: "5.5 years (incl. internship)",
+        type: "govt",
+        eligibility: "BPC + NEET UG (qualify)",
+        entranceExam: "NEET UG",
+        careerSlug: "doctor-mbbs",
+        careers: ["Doctor", "Surgeon", "Medical Officer", "Specialist (after MD/MS)"],
+        links: [
+          { label: "NEET — Official Site", url: "https://nta.ac.in/NEET" },
+          { label: "NMC (Medical Council of India)", url: "https://www.nmc.org.in" },
+          { label: "MCC Counselling", url: "https://mcc.nic.in" },
+        ],
+        children: [
+          {
+            id: "mbbs-direct",
+            label: "Direct Practice",
+            subtitle: "Start as Medical Officer / GP",
+            duration: "Immediate",
+            type: "govt",
+            careers: ["General Physician", "Medical Officer", "Rural Health"],
+            children: [
+              { id: "career-gp", label: "General Physician", subtitle: "₹6-15 LPA", type: "govt", careers: ["Private Clinic", "Hospitals", "Rural Health Centers"] },
+              { id: "career-medical-officer", label: "Medical Officer", subtitle: "₹8-20 LPA", type: "govt", careers: ["Government Hospitals", "PHCs", "CHCs"] },
+            ],
+          },
+          {
+            id: "md-ms",
+            label: "MD / MS (Specialization)",
+            subtitle: "Specialize in a medical field",
+            fees: { govt: "₹10,000 — ₹50,000/yr", private: "₹10,00,000 — ₹50,00,000/yr" },
+            duration: "3 years",
+            type: "govt",
+            eligibility: "MBBS + NEET PG",
+            entranceExam: "NEET PG",
+            careers: ["Specialist Doctor", "Surgeon", "Professor"],
+            links: [
+              { label: "NEET PG — Official Site", url: "https://nta.ac.in/NEET" },
+              { label: "MCC PG Counselling", url: "https://mcc.nic.in" },
+            ],
+            children: [
+              { id: "career-surgeon", label: "Surgeon (MS)", subtitle: "₹15-50+ LPA", type: "govt", careers: ["AIIMS", "Apollo", "Fortis", "Private Practice"] },
+              { id: "career-specialist", label: "Specialist (MD)", subtitle: "₹12-40+ LPA", type: "govt", careers: ["Cardiology", "Neurology", "Oncology", "Pediatrics"] },
+              { id: "career-med-prof", label: "Medical Professor", subtitle: "₹10-30+ LPA", type: "govt", careers: ["Medical Colleges", "AIIMS", "JIPMER"] },
+            ],
+          },
+          {
+            id: "mba-healthcare",
+            label: "MBA Healthcare",
+            subtitle: "Hospital Management / Healthcare Admin",
+            fees: { govt: "₹50,000 — ₹3,00,000/yr", private: "₹5,00,000 — ₹15,00,000/yr" },
+            duration: "2 years",
+            type: "private",
+            eligibility: "MBBS + CAT/XAT",
+            entranceExam: "CAT, XAT, MAT",
+            careers: ["Hospital Administrator", "Healthcare Consultant", "Public Health"],
+          },
+        ],
+      },
+      {
+        id: "bds",
+        label: "BDS",
+        subtitle: "Bachelor of Dental Surgery",
+        fees: { govt: "₹10,000 — ₹50,000/yr", private: "₹3,00,000 — ₹10,00,000/yr" },
+        duration: "5 years (incl. internship)",
+        type: "govt",
+        eligibility: "BPC + NEET UG",
+        entranceExam: "NEET UG",
+        careers: ["Dentist", "Dental Surgeon", "Orthodontist (after MDS)"],
+      },
+      {
+        id: "bams",
+        label: "BAMS",
+        subtitle: "Ayurvedic Medicine & Surgery",
+        fees: { govt: "₹10,000 — ₹40,000/yr", private: "₹2,00,000 — ₹6,00,000/yr" },
+        duration: "5.5 years",
+        type: "govt",
+        eligibility: "BPC + NEET UG",
+        entranceExam: "NEET UG",
+        careers: ["Ayurvedic Doctor", "Panchakarma Specialist"],
+      },
+      {
+        id: "bhms",
+        label: "BHMS",
+        subtitle: "Homeopathic Medicine & Surgery",
+        fees: { govt: "₹10,000 — ₹30,000/yr", private: "₹1,50,000 — ₹4,00,000/yr" },
+        duration: "5.5 years",
+        type: "govt",
+        eligibility: "BPC + NEET UG",
+        entranceExam: "NEET UG",
+        careers: ["Homeopathic Doctor"],
+      },
+      {
+        id: "bpharm",
+        label: "B.Pharm",
+        subtitle: "Pharmacy",
+        fees: { govt: "₹10,000 — ₹40,000/yr", private: "₹50,000 — ₹2,50,000/yr" },
+        duration: "4 years",
+        type: "govt",
+        eligibility: "BPC / MPC",
+        entranceExam: "TS EAMCET (BiPC stream)",
+        careerSlug: "pharmacist",
+        careers: ["Pharmacist", "Drug Inspector", "Pharmaceutical Research", "Medical Rep"],
+      },
+      {
+        id: "bsc-nursing",
+        label: "B.Sc Nursing",
+        subtitle: "Nursing",
+        fees: { govt: "₹10,000 — ₹30,000/yr", private: "₹50,000 — ₹1,50,000/yr" },
+        duration: "4 years",
+        type: "govt",
+        eligibility: "BPC",
+        careerSlug: "nurse",
+        careers: ["Staff Nurse", "Nursing Officer", "Abroad Opportunities (UK, US, Middle East)"],
+      },
+      {
+        id: "bsc-agriculture",
+        label: "B.Sc Agriculture",
+        subtitle: "Agriculture",
+        fees: { govt: "₹5,000 — ₹20,000/yr", private: "₹40,000 — ₹1,50,000/yr" },
+        duration: "4 years",
+        type: "govt",
+        eligibility: "BPC / MPC with Biology",
+        entranceExam: "TS EAMCET (BiPC)",
+        careers: ["Agricultural Officer", "Agricultural Scientist", "Banking (NABARD)"],
+      },
+      {
+        id: "bsc-biotech",
+        label: "B.Sc Biotechnology",
+        subtitle: "Biotechnology",
+        fees: { govt: "₹5,000 — ₹25,000/yr", private: "₹50,000 — ₹2,00,000/yr" },
+        duration: "3 years",
+        type: "govt",
+        eligibility: "BPC",
+        careers: ["Biotech Researcher", "Lab Technician", "Pharmaceutical Industry"],
+      },
+      {
+        id: "bsc-mlt",
+        label: "B.Sc MLT",
+        subtitle: "Medical Lab Technology",
+        fees: { govt: "₹5,000 — ₹20,000/yr", private: "₹40,000 — ₹1,50,000/yr" },
+        duration: "3 years",
+        type: "govt",
+        eligibility: "BPC",
+        careers: ["Lab Technician", "Pathology Lab", "Diagnostic Centers"],
+      },
+    ],
+  },
+  {
+    id: "inter-cec",
+    label: "Intermediate — CEC",
+    subtitle: "Civics, Economics, Commerce",
+    fees: { govt: "Free — ₹8,000/yr", private: "₹20,000 — ₹80,000/yr" },
+    duration: "2 years (Class 11-12)",
+    type: "govt",
+    eligibility: "SSC / Class 10 pass",
+    children: [
+      {
+        id: "bcom",
+        label: "B.Com",
+        subtitle: "Bachelor of Commerce",
+        fees: { govt: "₹3,000 — ₹15,000/yr", private: "₹20,000 — ₹1,00,000/yr" },
+        duration: "3 years",
+        type: "govt",
+        eligibility: "CEC / MEC",
+        careers: ["Accountant", "Tax Consultant", "Banking", "Financial Analyst"],
+        children: [
+          {
+            id: "bcom-direct",
+            label: "Direct to Career",
+            subtitle: "Start working after B.Com",
+            duration: "Immediate",
+            type: "govt",
+            careers: ["Accountant", "Banking", "Tax Consultant"],
+            children: [
+              { id: "career-accountant", label: "Accountant", subtitle: "₹3-10 LPA", type: "govt", careers: ["Corporate Accounting", "CA Firms", "Banks"] },
+              { id: "career-banking", label: "Banking (Clerk/PO)", subtitle: "₹4-12 LPA", type: "govt", careers: ["SBI", "IBPS", "RBI"] },
+            ],
+          },
+          {
+            id: "mcom",
+            label: "M.Com",
+            subtitle: "Master of Commerce",
+            fees: { govt: "₹5,000 — ₹20,000/yr", private: "₹20,000 — ₹1,00,000/yr" },
+            duration: "2 years",
+            type: "govt",
+            eligibility: "B.Com",
+            careers: ["Lecturer", "Financial Analyst", "Banking (PO)"],
+          },
+          {
+            id: "mba-after-bcom",
+            label: "MBA",
+            subtitle: "Master of Business Administration",
+            fees: { govt: "₹50,000 — ₹5,00,000/yr", private: "₹5,00,000 — ₹25,00,000/yr" },
+            duration: "2 years",
+            type: "private",
+            eligibility: "Bachelor's degree + CAT/XAT/GMAT",
+            entranceExam: "CAT, XAT, GMAT, CMAT",
+            careers: ["Marketing Manager", "Business Analyst", "Consultant"],
+            links: [
+              { label: "CAT — Official Site", url: "https://iimcat.ac.in" },
+            ],
+          },
+        ],
+      },
+      {
+        id: "bcom-hons",
+        label: "B.Com (Honours)",
+        subtitle: "Specialized Commerce",
+        fees: { govt: "₹5,000 — ₹20,000/yr", private: "₹30,000 — ₹1,50,000/yr" },
+        duration: "3 years",
+        type: "private",
+        eligibility: "CEC / MEC + Merit",
+        careers: ["CA (after CA course)", "CS", "CMA", "Investment Banking"],
+      },
+      {
+        id: "ca",
+        label: "Chartered Accountancy",
+        subtitle: "ICAI — CA Foundation → Inter → Final",
+        fees: { govt: "₹25,000 — ₹60,000 (total)", private: "—" },
+        duration: "4-5 years (with articleship)",
+        type: "govt",
+        eligibility: "12th pass → CA Foundation",
+        entranceExam: "CA Foundation (ICAI)",
+        careerSlug: "chartered-accountant",
+        careers: ["Chartered Accountant", "Audit Partner", "Tax Consultant", "CFO"],
+        links: [
+          { label: "ICAI — Official Site", url: "https://www.icai.org" },
+          { label: "CA Course Details", url: "https://www.icai.org/bos-academy/course-details" },
+        ],
+      },
+      {
+        id: "cs",
+        label: "Company Secretary",
+        subtitle: "ICSI — CS Foundation → Executive → Professional",
+        fees: { govt: "₹20,000 — ₹50,000 (total)", private: "—" },
+        duration: "3-4 years",
+        type: "govt",
+        eligibility: "12th pass",
+        entranceExam: "CS Foundation (ICSI)",
+        careers: ["Company Secretary", "Corporate Governance", "Legal Compliance"],
+      },
+      {
+        id: "banking-prep",
+        label: "Banking Exam Preparation",
+        subtitle: "IBPS PO, SBI PO, Clerk, RRB",
+        fees: { govt: "₹5,000 — ₹20,000 (coaching)", private: "₹30,000 — ₹1,00,000 (coaching)" },
+        duration: "6-12 months prep",
+        type: "govt",
+        eligibility: "12th pass (for Clerk) / Graduate (for PO)",
+        entranceExam: "IBPS, SBI, RBI exams",
+        careers: ["Bank PO", "Bank Clerk", "RBI Officer", "Insurance Officer"],
+      },
+    ],
+  },
+  {
+    id: "inter-mec",
+    label: "Intermediate — MEC",
+    subtitle: "Maths, Economics, Commerce",
+    fees: { govt: "Free — ₹10,000/yr", private: "₹25,000 — ₹1,00,000/yr" },
+    duration: "2 years (Class 11-12)",
+    type: "govt",
+    eligibility: "SSC / Class 10 pass",
+    children: [
+      { id: "bcom-mec", label: "B.Com / B.Com (Hons)", subtitle: "Same as CEC paths", fees: { govt: "₹3,000 — ₹20,000/yr", private: "₹20,000 — ₹1,50,000/yr" }, duration: "3 years", type: "govt", careers: ["CA", "CS", "Banking", "Finance"] },
+      { id: "bba", label: "BBA", subtitle: "Bachelor of Business Administration", fees: { govt: "₹10,000 — ₹40,000/yr", private: "₹50,000 — ₹3,00,000/yr" }, duration: "3 years", type: "private", careers: ["Management Trainee", "Business Analyst", "Entrepreneurship"] },
+      { id: "bca-mec", label: "BCA", subtitle: "Bachelor of Computer Applications", fees: { govt: "₹5,000 — ₹25,000/yr", private: "₹40,000 — ₹2,00,000/yr" }, duration: "3 years", type: "private", careers: ["Software Developer", "Web Developer"] },
+    ],
+  },
+  {
+    id: "inter-mbipc",
+    label: "Intermediate — MBiPC",
+    subtitle: "Maths + Biology (both streams)",
+    fees: { govt: "Free — ₹10,000/yr", private: "₹40,000 — ₹1,50,000/yr" },
+    duration: "2 years (Class 11-12)",
+    type: "govt",
+    eligibility: "SSC / Class 10 pass",
+    note: "Both Engineering and Medical options open",
+    children: [
+      { id: "mbbs-mbipc", label: "MBBS / BDS / B.Pharm", subtitle: "Medical paths (via NEET)", fees: { govt: "₹10,000 — ₹50,000/yr", private: "₹3,00,000 — ₹25,00,000/yr" }, duration: "4-5.5 years", type: "govt", entranceExam: "NEET UG", careers: ["Doctor", "Dentist", "Pharmacist"] },
+      { id: "btech-mbipc", label: "B.Tech (all branches)", subtitle: "Engineering paths (via EAMCET/JEE)", fees: { govt: "₹10,000 — ₹50,000/yr", private: "₹80,000 — ₹5,00,000/yr" }, duration: "4 years", type: "govt", entranceExam: "TS EAMCET, JEE Main", careers: ["Software Engineer", "Core Engineer"] },
+    ],
+  },
+  {
+    id: "inter-hepp",
+    label: "Intermediate — HEPP",
+    subtitle: "History, Economics, Political Science, Psychology",
+    fees: { govt: "Free — ₹5,000/yr", private: "₹15,000 — ₹60,000/yr" },
+    duration: "2 years (Class 11-12)",
+    type: "govt",
+    eligibility: "SSC / Class 10 pass",
+    children: [
+      { id: "ba", label: "BA", subtitle: "Bachelor of Arts", fees: { govt: "₹2,000 — ₹10,000/yr", private: "₹10,000 — ₹50,000/yr" }, duration: "3 years", type: "govt", careers: ["Civil Services", "Teaching", "Journalism", "Social Work"] },
+      { id: "ba-economics", label: "BA Economics", subtitle: "Specialized Economics", fees: { govt: "₹3,000 — ₹15,000/yr", private: "₹15,000 — ₹80,000/yr" }, duration: "3 years", type: "govt", careers: ["Economist", "Policy Analyst", "Banking", "Research"] },
+      { id: "bsw", label: "BSW", subtitle: "Bachelor of Social Work", fees: { govt: "₹2,000 — ₹10,000/yr", private: "₹10,000 — ₹50,000/yr" }, duration: "3 years", type: "govt", careers: ["Social Worker", "NGO", "Community Development"] },
+      { id: "bjournalism", label: "BJournalism / BJMC", subtitle: "Journalism & Mass Communication", fees: { govt: "₹5,000 — ₹20,000/yr", private: "₹50,000 — ₹3,00,000/yr" }, duration: "3 years", type: "private", careers: ["Journalist", "Content Writer", "Media Professional", "Public Relations"] },
+    ],
+  },
+
+  // ── DIPLOMA ──
+  {
+    id: "diploma",
+    label: "Diploma / Polytechnic",
+    subtitle: "3-year technical course after Class 10",
+    fees: { govt: "₹2,000 — ₹15,000/yr", private: "₹30,000 — ₹1,00,000/yr" },
+    duration: "3 years",
+    type: "govt",
+    eligibility: "SSC / Class 10 pass",
+    entranceExam: "Polycet (Telangana)",
+    note: "After diploma → Lateral entry to B.Tech 2nd year",
+    children: [
+      { id: "diploma-cse", label: "Diploma CSE", subtitle: "Computer Science", fees: { govt: "₹5,000 — ₹15,000/yr", private: "₹40,000 — ₹1,00,000/yr" }, duration: "3 years", type: "govt", careers: ["Software Developer", "IT Support"] },
+      { id: "diploma-ece", label: "Diploma ECE", subtitle: "Electronics & Communication", fees: { govt: "₹5,000 — ₹15,000/yr", private: "₹40,000 — ₹1,00,000/yr" }, duration: "3 years", type: "govt", careers: ["Electronics Technician", "Embedded Systems"] },
+      { id: "diploma-eee", label: "Diploma EEE", subtitle: "Electrical & Electronics", fees: { govt: "₹5,000 — ₹15,000/yr", private: "₹40,000 — ₹1,00,000/yr" }, duration: "3 years", type: "govt", careers: ["Electrical Engineer", "Power Sector"] },
+      { id: "diploma-me", label: "Diploma ME", subtitle: "Mechanical Engineering", fees: { govt: "₹5,000 — ₹15,000/yr", private: "₹40,000 — ₹1,00,000/yr" }, duration: "3 years", type: "govt", careers: ["Mechanical Technician", "Manufacturing"] },
+      { id: "diploma-ce", label: "Diploma CE", subtitle: "Civil Engineering", fees: { govt: "₹5,000 — ₹15,000/yr", private: "₹40,000 — ₹1,00,000/yr" }, duration: "3 years", type: "govt", careers: ["Surveyor", "Site Engineer", "Government (PWD)"] },
+    ],
+  },
+
+  // ── ITI ──
+  {
+    id: "iti",
+    label: "ITI (Industrial Training Institute)",
+    subtitle: "Vocational training — 1-2 years",
+    fees: { govt: "Free — ₹5,000/yr", private: "₹10,000 — ₹50,000/yr" },
+    duration: "1-2 years",
+    type: "govt",
+    eligibility: "SSC / Class 10 pass",
+    note: "Direct employment or apprenticeship after completion",
+    children: [
+      { id: "iti-electrician", label: "Electrician", type: "govt", duration: "2 years", careers: ["Electrician", "Maintenance Technician"] },
+      { id: "iti-fitter", label: "Fitter", type: "govt", duration: "2 years", careers: ["Fitter", "Assembly Line Technician"] },
+      { id: "iti-welder", label: "Welder", type: "govt", duration: "1 year", careers: ["Welder", "Fabrication"] },
+      { id: "iti-mechanic", label: "Mechanic (Motor Vehicle)", type: "govt", duration: "2 years", careers: ["Auto Mechanic", "Service Center"] },
+      { id: "iti-copap", label: "COPA (Computer Operator)", type: "govt", duration: "1 year", careers: ["Data Entry", "Computer Operator"] },
+    ],
+  },
+];
+
+const telanganaTree: EducationNode[] = [
+  // ── CLASS 5 ENTRY POINTS ──
+  {
+    id: "ts-govt-school",
+    label: "Government School",
+    subtitle: "Zilla Parishad / Mandal Parishad / Municipal",
+    fees: { govt: "Free (mid-day meal + textbooks)", private: "—" },
+    duration: "Class 5-10",
+    type: "govt",
+    children: telanganaAfter10,
+  },
+  {
+    id: "ts-residential",
+    label: "Telangana Residential Schools",
+    subtitle: "MJPTBRC / BC Welfare / Tribal Welfare",
+    fees: { govt: "Free (fully residential — food + lodging + education)", private: "—" },
+    duration: "Class 5-10",
+    type: "residential",
+    eligibility: "BC / SC / ST / Minority students",
+    note: "Mahatma Jyotiba Phule Telangana Residential Schools, Telangana Tribal Welfare Residential Schools",
+    children: telanganaAfter10,
+  },
+  {
+    id: "ts-kgbv",
+    label: "Kasturba Gandhi Balika Vidyalaya (KGBV)",
+    subtitle: "Girls from SC / ST / OBC / Minority",
+    fees: { govt: "Free (residential)", private: "—" },
+    duration: "Class 6-10",
+    type: "residential",
+    eligibility: "Girls from disadvantaged backgrounds",
+    children: telanganaAfter10,
+  },
+  {
+    id: "ts-model-school",
+    label: "Telangana Model Schools",
+    subtitle: "State-run model schools with better facilities",
+    fees: { govt: "Free — ₹5,000/yr", private: "—" },
+    duration: "Class 6-12",
+    type: "govt",
+    children: telanganaAfter10,
+  },
+  {
+    id: "ts-navodaya",
+    label: "Jawahar Navodaya Vidyalaya (JNV)",
+    subtitle: "Entrance exam based — rural talent",
+    fees: { govt: "Free (fully residential)", private: "—" },
+    duration: "Class 6-12",
+    type: "residential",
+    eligibility: "Rural students, entrance exam",
+    entranceExam: "Navodaya Vidyalaya Entrance Exam",
+    children: telanganaAfter10,
+  },
+  {
+    id: "ts-kv",
+    label: "Kendriya Vidyalaya (KV)",
+    subtitle: "For central govt employees' children",
+    fees: { govt: "₹2,400 — ₹4,800/yr", private: "—" },
+    duration: "Class 1-12",
+    type: "govt",
+    eligibility: "Central govt employees / transferable jobs",
+    children: telanganaAfter10,
+  },
+  {
+    id: "ts-cbse-pvt",
+    label: "CBSE Private Schools",
+    subtitle: "DAV, Narayana, Chaitanya, Delhi Public School, etc.",
+    fees: { govt: "—", private: "₹30,000 — ₹2,00,000/yr" },
+    duration: "Class 1-12",
+    type: "private",
+    note: "Narayana & Chaitanya also offer integrated IIT/EAMCET coaching",
+    children: telanganaAfter10,
+  },
+  {
+    id: "ts-icse-pvt",
+    label: "ICSE / CISCE Schools",
+    subtitle: "St. Joseph's, Cathedral, etc.",
+    fees: { govt: "—", private: "₹50,000 — ₹3,00,000/yr" },
+    duration: "Class 1-12",
+    type: "private",
+    children: telanganaAfter10,
+  },
+  {
+    id: "ts-state-pvt",
+    label: "State Board Private Schools",
+    subtitle: "Private schools following TS Board syllabus",
+    fees: { govt: "—", private: "₹10,000 — ₹50,000/yr" },
+    duration: "Class 1-12",
+    type: "private",
+    children: telanganaAfter10,
+  },
+];
+
+// ─────────────────────────────────────────────────────────────
+// ANDHRA PRADESH
+// ─────────────────────────────────────────────────────────────
+
+const apAfter10: EducationNode[] = [
+  {
+    id: "ap-inter-mpc",
+    label: "Intermediate — MPC",
+    subtitle: "Maths, Physics, Chemistry",
+    fees: { govt: "Free — ₹8,000/yr", private: "₹35,000 — ₹1,20,000/yr" },
+    duration: "2 years",
+    type: "govt",
+    entranceExam: "AP EAMCET, JEE Main",
+    links: [
+      { label: "AP Board of Intermediate Education", url: "https://bie.ap.gov.in" },
+      { label: "AP EAMCET — Official Site", url: "https://apeamcet.nic.in" },
+    ],
+    children: [
+      { id: "ap-btech-cse", label: "B.Tech CSE", fees: { govt: "₹10,000 — ₹45,000/yr", private: "₹70,000 — ₹4,50,000/yr" }, duration: "4 years", type: "govt", entranceExam: "AP EAMCET, JEE Main", careers: ["Software Engineer", "Data Scientist"] },
+      { id: "ap-btech-ece", label: "B.Tech ECE", fees: { govt: "₹10,000 — ₹45,000/yr", private: "₹70,000 — ₹3,50,000/yr" }, duration: "4 years", type: "govt", entranceExam: "AP EAMCET, JEE Main", careers: ["VLSI Engineer", "Embedded Systems"] },
+      { id: "ap-btech-eee", label: "B.Tech EEE", fees: { govt: "₹10,000 — ₹45,000/yr", private: "₹70,000 — ₹3,50,000/yr" }, duration: "4 years", type: "govt", entranceExam: "AP EAMCET, JEE Main", careers: ["Power Systems", "Electrical Design"] },
+      { id: "ap-btech-me", label: "B.Tech ME", fees: { govt: "₹10,000 — ₹45,000/yr", private: "₹70,000 — ₹3,50,000/yr" }, duration: "4 years", type: "govt", entranceExam: "AP EAMCET, JEE Main", careers: ["Design Engineer", "Manufacturing"] },
+      { id: "ap-btech-ce", label: "B.Tech CE", fees: { govt: "₹10,000 — ₹45,000/yr", private: "₹70,000 — ₹3,00,000/yr" }, duration: "4 years", type: "govt", entranceExam: "AP EAMCET, JEE Main", careers: ["Civil Engineer", "Infrastructure"] },
+      { id: "ap-bsc-cs", label: "B.Sc CS", fees: { govt: "₹5,000 — ₹18,000/yr", private: "₹25,000 — ₹1,20,000/yr" }, duration: "3 years", type: "govt", careers: ["Software Developer"] },
+    ],
+  },
+  {
+    id: "ap-inter-bpc",
+    label: "Intermediate — BPC",
+    subtitle: "Biology, Physics, Chemistry",
+    fees: { govt: "Free — ₹8,000/yr", private: "₹35,000 — ₹1,20,000/yr" },
+    duration: "2 years",
+    type: "govt",
+    entranceExam: "NEET UG, AP EAMCET",
+    children: [
+      { id: "ap-mbbs", label: "MBBS", fees: { govt: "₹10,000 — ₹45,000/yr", private: "₹7,00,000 — ₹20,00,000/yr" }, duration: "5.5 years", type: "govt", entranceExam: "NEET UG", careers: ["Doctor"] },
+      { id: "ap-bds", label: "BDS", fees: { govt: "₹10,000 — ₹40,000/yr", private: "₹2,50,000 — ₹8,00,000/yr" }, duration: "5 years", type: "govt", entranceExam: "NEET UG", careers: ["Dentist"] },
+      { id: "ap-bpharm", label: "B.Pharm", fees: { govt: "₹8,000 — ₹35,000/yr", private: "₹40,000 — ₹2,00,000/yr" }, duration: "4 years", type: "govt", careers: ["Pharmacist", "Drug Research"] },
+      { id: "ap-bsc-nursing", label: "B.Sc Nursing", fees: { govt: "₹8,000 — ₹25,000/yr", private: "₹40,000 — ₹1,20,000/yr" }, duration: "4 years", type: "govt", careers: ["Nurse", "Abroad Opportunities"] },
+      { id: "ap-bsc-agri", label: "B.Sc Agriculture", fees: { govt: "₹5,000 — ₹18,000/yr", private: "₹35,000 — ₹1,20,000/yr" }, duration: "4 years", type: "govt", entranceExam: "AP EAMCET", careers: ["Agricultural Officer"] },
+    ],
+  },
+  {
+    id: "ap-inter-cec",
+    label: "Intermediate — CEC",
+    subtitle: "Civics, Economics, Commerce",
+    fees: { govt: "Free — ₹6,000/yr", private: "₹15,000 — ₹60,000/yr" },
+    duration: "2 years",
+    type: "govt",
+    children: [
+      { id: "ap-bcom", label: "B.Com", fees: { govt: "₹2,000 — ₹12,000/yr", private: "₹15,000 — ₹80,000/yr" }, duration: "3 years", type: "govt", careers: ["Accountant", "Banking", "CA"] },
+      { id: "ap-ca", label: "CA / CS", fees: { govt: "₹20,000 — ₹50,000 (total)", private: "—" }, duration: "4-5 years", type: "govt", careers: ["Chartered Accountant", "Company Secretary"] },
+    ],
+  },
+  {
+    id: "ap-diploma",
+    label: "Diploma / Polytechnic",
+    subtitle: "3-year technical course",
+    fees: { govt: "₹2,000 — ₹12,000/yr", private: "₹25,000 — ₹80,000/yr" },
+    duration: "3 years",
+    type: "govt",
+    entranceExam: "AP Polycet",
+    children: [
+      { id: "ap-diploma-cse", label: "Diploma CSE", fees: { govt: "₹5,000 — ₹12,000/yr", private: "₹30,000 — ₹80,000/yr" }, duration: "3 years", type: "govt", careers: ["Software Developer"] },
+      { id: "ap-diploma-ece", label: "Diploma ECE", fees: { govt: "₹5,000 — ₹12,000/yr", private: "₹30,000 — ₹80,000/yr" }, duration: "3 years", type: "govt", careers: ["Electronics Technician"] },
+      { id: "ap-diploma-eee", label: "Diploma EEE", fees: { govt: "₹5,000 — ₹12,000/yr", private: "₹30,000 — ₹80,000/yr" }, duration: "3 years", type: "govt", careers: ["Electrical Engineer"] },
+      { id: "ap-diploma-me", label: "Diploma ME", fees: { govt: "₹5,000 — ₹12,000/yr", private: "₹30,000 — ₹80,000/yr" }, duration: "3 years", type: "govt", careers: ["Mechanical Technician"] },
+      { id: "ap-diploma-ce", label: "Diploma CE", fees: { govt: "₹5,000 — ₹12,000/yr", private: "₹30,000 — ₹80,000/yr" }, duration: "3 years", type: "govt", careers: ["Site Engineer"] },
+    ],
+  },
+  {
+    id: "ap-iti",
+    label: "ITI",
+    subtitle: "Vocational training",
+    fees: { govt: "Free — ₹4,000/yr", private: "₹8,000 — ₹40,000/yr" },
+    duration: "1-2 years",
+    type: "govt",
+    careers: ["Electrician", "Fitter", "Welder", "Mechanic"],
+  },
+];
+
+const apTree: EducationNode[] = [
+  { id: "ap-govt-school", label: "Government School", subtitle: "ZP / MP / Municipal Schools", fees: { govt: "Free (mid-day meal + textbooks)", private: "—" }, duration: "Class 5-10", type: "govt", children: apAfter10 },
+  { id: "ap-gurukul", label: "AP Residential Schools (APRS)", subtitle: "Jawahar Navodaya / AP Social Welfare / Tribal Welfare", fees: { govt: "Free (fully residential)", private: "—" }, duration: "Class 5-10", type: "residential", children: apAfter10 },
+  { id: "ap-navodaya", label: "Jawahar Navodaya Vidyalaya (JNV)", subtitle: "Entrance exam based", fees: { govt: "Free (residential)", private: "—" }, duration: "Class 6-12", type: "residential", entranceExam: "JNV Entrance Exam", children: apAfter10 },
+  { id: "ap-kv", label: "Kendriya Vidyalaya (KV)", subtitle: "For central govt employees", fees: { govt: "₹2,400 — ₹4,800/yr", private: "—" }, duration: "Class 1-12", type: "govt", children: apAfter10 },
+  { id: "ap-cbse-pvt", label: "CBSE Private Schools", subtitle: "Narayana, Chaitanya, DAV, DPS, etc.", fees: { govt: "—", private: "₹25,000 — ₹1,80,000/yr" }, duration: "Class 1-12", type: "private", children: apAfter10 },
+  { id: "ap-icse-pvt", label: "ICSE / CISCE Schools", subtitle: "St. Joseph's, etc.", fees: { govt: "—", private: "₹40,000 — ₹2,50,000/yr" }, duration: "Class 1-12", type: "private", children: apAfter10 },
+  { id: "ap-state-pvt", label: "State Board Private Schools", subtitle: "Private AP Board schools", fees: { govt: "—", private: "₹8,000 — ₹40,000/yr" }, duration: "Class 1-12", type: "private", children: apAfter10 },
+];
+
+// ─────────────────────────────────────────────────────────────
+// EXPORTS
+// ─────────────────────────────────────────────────────────────
+
+export const states: StateData[] = [
+  { id: "telangana", label: "Telangana", available: true, tree: telanganaTree },
+  { id: "andhra-pradesh", label: "Andhra Pradesh", available: true, tree: apTree },
+  { id: "karnataka", label: "Karnataka", available: false, tree: [] },
+  { id: "tamil-nadu", label: "Tamil Nadu", available: false, tree: [] },
+  { id: "maharashtra", label: "Maharashtra", available: false, tree: [] },
+  { id: "kerala", label: "Kerala", available: false, tree: [] },
+  { id: "delhi", label: "Delhi NCR", available: false, tree: [] },
+  { id: "uttar-pradesh", label: "Uttar Pradesh", available: false, tree: [] },
+  { id: "madhya-pradesh", label: "Madhya Pradesh", available: false, tree: [] },
+  { id: "rajasthan", label: "Rajasthan", available: false, tree: [] },
+  { id: "west-bengal", label: "West Bengal", available: false, tree: [] },
+  { id: "gujarat", label: "Gujarat", available: false, tree: [] },
+  { id: "odisha", label: "Odisha", available: false, tree: [] },
+  { id: "punjab", label: "Punjab", available: false, tree: [] },
+  { id: "haryana", label: "Haryana", available: false, tree: [] },
+];
+
+export function getStateData(stateId: string): StateData | undefined {
+  return states.find((s) => s.id === stateId);
+}
+
+export function countNodes(nodes: EducationNode[]): number {
+  let count = 0;
+  for (const node of nodes) {
+    count++;
+    if (node.children) count += countNodes(node.children);
+  }
+  return count;
+}
+
+export function getMaxDepth(nodes: EducationNode[], depth = 1): number {
+  let max = depth;
+  for (const node of nodes) {
+    if (node.children) {
+      max = Math.max(max, getMaxDepth(node.children, depth + 1));
+    }
+  }
+  return max;
+}
