@@ -243,6 +243,12 @@ export async function GET(req: Request) {
   try {
     await connectDB();
 
+    // Clear all posts if ?clear=true
+    const url = new URL(req.url);
+    if (url.searchParams.get("clear") === "true") {
+      await BlogPost.deleteMany({});
+    }
+
     const [redditPosts, rssPosts, hnPosts] = await Promise.all([
       fetchReddit(),
       fetchRSS(),
