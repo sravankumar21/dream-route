@@ -2,6 +2,40 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import BlogPost from "@/models/BlogPost";
 
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+
+async function summarizeWithGemini(title: string, text: string): Promise<string | null> {
+  if (!GEMINI_API_KEY) return null;
+
+  try {
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [
+                {
+                  text: `Summarize this news article in 2-3 concise sentences for a student who wants to understand why it matters. Be factual, no fluff.\n\nTitle: ${title}\nContent: ${text.slice(0, 1000)}`,
+                },
+              ],
+            },
+          ],
+          generationConfig: { maxOutputTokens: 150, temperature: 0.3 },
+        }),
+      }
+    );
+
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || null;
+  } catch {
+    return null;
+  }
+}
+
 const AI_KEYWORDS = [
   "ai", "artificial intelligence", "machine learning", "deep learning",
   "chatgpt", "gpt", "llm", "large language model", "openai", "anthropic",
@@ -217,10 +251,22 @@ export async function GET(req: Request) {
 
     const allPosts = [...redditPosts, ...rssPosts, ...hnPosts];
 
+    // Summarize with Gemini (batch of 5 at a time to stay under rate limits)
+    const postsWithSummary: (typeof allPosts[0] & { aiSummary?: string })[] = [];
+    for (let i = 0; i < allPosts.length; i += 5) {
+      const batch = allPosts.slice(i, i + 5);
+      const summaries = await Promise.all(
+        batch.map((p) => summarizeWithGemini(p.title, p.summary || p.title))
+      );
+      batch.forEach((p, j) => {
+        postsWithSummary.push({ ...p, aiSummary: summaries[j] || undefined });
+      });
+    }
+
     let stored = 0;
     let skipped = 0;
 
-    for (const post of allPosts) {
+    for (const post of postsWithSummary) {
       const slug = slugify(post.title);
       const exists = await BlogPost.findOne({ slug });
       if (exists) {
@@ -233,6 +279,7 @@ export async function GET(req: Request) {
           title: post.title,
           slug,
           summary: post.summary,
+          aiSummary: post.aiSummary,
           source: rssPosts.includes(post) ? "rss" : hnPosts.includes(post) ? "hn" : "reddit",
           sourceUrl: post.url,
           sourceName: post.sourceName,

@@ -148,11 +148,15 @@ export default async function BlogPage({
                             {post.title}
                           </h3>
 
-                          {post.summary && post.summary !== post.title && (
+                          {post.aiSummary ? (
+                            <p className="text-[13px] text-zinc-600 leading-relaxed mb-3">
+                              {post.aiSummary}
+                            </p>
+                          ) : post.summary && post.summary !== post.title ? (
                             <p className="text-[13px] text-zinc-500 line-clamp-2 mb-3">
                               {post.summary}
                             </p>
-                          )}
+                          ) : null}
 
                           <div className="flex items-center gap-4 text-[12px] text-zinc-400">
                             {post.score > 0 && (

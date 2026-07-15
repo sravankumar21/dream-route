@@ -4,6 +4,7 @@ export interface IBlogPost extends Document {
   title: string;
   slug: string;
   summary: string;
+  aiSummary?: string;
   content: string;
   source: "reddit" | "rss" | "hn";
   sourceUrl: string;
@@ -22,6 +23,7 @@ const BlogPostSchema = new Schema<IBlogPost>(
     title: { type: String, required: true },
     slug: { type: String, required: true, unique: true },
     summary: { type: String, required: true },
+    aiSummary: { type: String },
     content: { type: String, default: "" },
     source: { type: String, enum: ["reddit", "rss", "hn"], required: true },
     sourceUrl: { type: String, required: true },
