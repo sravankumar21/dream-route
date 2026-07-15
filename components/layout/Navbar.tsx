@@ -1,10 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { GraduationCap, Menu, X, Bookmark, Search } from "lucide-react";
-import { useState, useEffect } from "react";
+import { GraduationCap, Menu, X, Bookmark } from "lucide-react";
+import { useState } from "react";
 import { useSession, signOut } from "next-auth/react";
-import SearchModal from "@/components/SearchModal";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -18,20 +17,8 @@ const navLinks = [
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
   const { data: session, status } = useSession();
   const isLoading = status === "loading";
-
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
-        e.preventDefault();
-        setSearchOpen(true);
-      }
-    };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, []);
 
   return (
     <>
@@ -58,14 +45,6 @@ export default function Navbar() {
                 </Link>
               ))}
               <div className="ml-2 flex items-center gap-1">
-                <button
-                  onClick={() => setSearchOpen(true)}
-                  className="flex items-center gap-2 text-[13px] text-zinc-400 hover:text-zinc-600 border border-zinc-200 hover:border-zinc-300 rounded-lg px-3 py-1.5 transition-all duration-150"
-                >
-                  <Search className="h-3.5 w-3.5" />
-                  Search
-                  <kbd className="text-[10px] text-zinc-300 ml-1">⌘K</kbd>
-                </button>
                 <div className="ml-1 pl-2 border-l border-zinc-200 flex items-center gap-1">
                   {isLoading ? (
                     <div className="w-[70px] h-[30px] bg-zinc-100 rounded-lg" />
@@ -97,12 +76,6 @@ export default function Navbar() {
             </div>
 
             <div className="flex items-center md:hidden gap-2">
-              <button
-                onClick={() => setSearchOpen(true)}
-                className="p-2 text-zinc-500 hover:text-zinc-900 rounded-lg hover:bg-zinc-50 transition-colors"
-              >
-                <Search className="h-5 w-5" />
-              </button>
               {!isLoading && !session && (
                 <Link
                   href="/auth/signin"
@@ -145,7 +118,6 @@ export default function Navbar() {
           )}
         </div>
       </nav>
-      <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
     </>
   );
 }

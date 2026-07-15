@@ -1,8 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, MapPin, GraduationCap, Target, Award } from "lucide-react";
-import { careers } from "@/data/careers";
+import { useRouter } from "next/navigation";
+import { ArrowRight, Search, MapPin, GraduationCap, Target, Award } from "lucide-react";
+import { careers, searchCareers } from "@/data/careers";
+import { CareerIcon } from "@/components/careers/CareerIcon";
 import CareerCard from "@/components/careers/CareerCard";
 import { exams } from "@/data/exams";
 import { scholarships } from "@/data/scholarships";
@@ -35,6 +38,37 @@ const howItWorks = [
 ];
 
 export default function Home() {
+  const router = useRouter();
+  const [query, setQuery] = useState("");
+  const [suggestions, setSuggestions] = useState<typeof careers>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+
+  const handleSearch = (value: string) => {
+    setQuery(value);
+    if (value.trim().length > 0) {
+      const results = searchCareers(value).slice(0, 5);
+      setSuggestions(results);
+      setShowSuggestions(results.length > 0);
+    } else {
+      setSuggestions([]);
+      setShowSuggestions(false);
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (query.trim()) {
+      router.push(`/careers?search=${encodeURIComponent(query.trim())}`);
+      setShowSuggestions(false);
+    }
+  };
+
+  const handleSelectCareer = (slug: string) => {
+    router.push(`/careers/${slug}`);
+    setShowSuggestions(false);
+    setQuery("");
+  };
+
   return (
     <div className="min-h-screen">
       {/* Hero */}
@@ -54,6 +88,51 @@ export default function Home() {
               Explore education paths from Class 5. Know exactly what to study,
               where, and how much it costs. Then learn the skills for free.
             </p>
+
+            {/* Search */}
+            <form onSubmit={handleSubmit} className="max-w-lg mx-auto mb-10 relative">
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-[18px] w-[18px] text-zinc-500" />
+                <input
+                  type="text"
+                  value={query}
+                  onChange={(e) => handleSearch(e.target.value)}
+                  onFocus={() => suggestions.length > 0 && setShowSuggestions(true)}
+                  onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+                  placeholder="Search careers — Software Engineer, Doctor, Designer..."
+                  className="w-full pl-11 pr-4 py-3.5 rounded-xl text-zinc-900 text-[15px] bg-white placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-300 transition-shadow"
+                />
+              </div>
+
+              {showSuggestions && suggestions.length > 0 && (
+                <div className="absolute z-50 top-full mt-2 w-full bg-white border border-zinc-200 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] py-2 overflow-hidden">
+                  {suggestions.map((career) => (
+                    <button
+                      key={career.id}
+                      type="button"
+                      onClick={() => handleSelectCareer(career.slug)}
+                      className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-zinc-50 transition-colors"
+                    >
+                      <div className="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center shrink-0">
+                        <CareerIcon name={career.icon} className="h-4 w-4 text-zinc-600" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-[14px] font-semibold text-zinc-900 truncate">{career.title}</p>
+                        <p className="text-[12px] text-zinc-500 truncate">{career.shortDescription}</p>
+                      </div>
+                    </button>
+                  ))}
+                  <div className="border-t border-zinc-100 px-4 py-2.5">
+                    <button
+                      type="submit"
+                      className="text-[13px] font-medium text-zinc-500 hover:text-zinc-900 transition-colors"
+                    >
+                      Search all careers &rarr;
+                    </button>
+                  </div>
+                </div>
+              )}
+            </form>
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link
