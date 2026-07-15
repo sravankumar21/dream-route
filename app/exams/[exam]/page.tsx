@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ExternalLink, Target, BookOpen, Calendar, Clock, Monitor, CheckCircle } from "lucide-react";
+import { ArrowLeft, ExternalLink, Target, BookOpen, Calendar, Clock, Monitor, CheckCircle, List, Link2 } from "lucide-react";
 import { exams, getExamById } from "@/data/exams";
 
 export function generateStaticParams() {
@@ -85,7 +85,7 @@ export default async function ExamDetailPage({ params }: { params: Promise<{ exa
                   <div>
                     <span className="text-[14px] font-bold text-zinc-900">Rank {target.rankRange}</span>
                     <span className="text-[13px] text-zinc-400 mx-2">|</span>
-                    <span className="text-[14px] font-semibold text-blue-600">Score {target.scoreRange}</span>
+                    <span className="text-[14px] font-semibold text-zinc-900">Score {target.scoreRange}</span>
                   </div>
                 </div>
 
@@ -97,7 +97,7 @@ export default async function ExamDetailPage({ params }: { params: Promise<{ exa
                   <p className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mb-1.5">Focus areas</p>
                   <div className="flex flex-wrap gap-1.5">
                     {target.whatToFocus.map((tip) => (
-                      <span key={tip} className="text-[12px] bg-blue-50 text-blue-700 border border-blue-100 px-2.5 py-1 rounded-md font-medium">
+                      <span key={tip} className="text-[12px] bg-zinc-100 text-zinc-700 px-2.5 py-1 rounded-md font-medium">
                         {tip}
                       </span>
                     ))}
@@ -140,28 +140,55 @@ export default async function ExamDetailPage({ params }: { params: Promise<{ exa
           </ul>
         </div>
 
-        {/* Official Links */}
+        {/* Web Options — Counselling Process */}
+        <div className="bg-white rounded-2xl border border-zinc-200 p-6 sm:p-7 mb-8">
+          <div className="flex items-center gap-2 mb-6">
+            <List className="h-4 w-4 text-zinc-400" />
+            <h2 className="text-[15px] font-bold text-zinc-900">Web Options — Counselling process</h2>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-left">
+              <thead>
+                <tr className="border-b border-zinc-100">
+                  <th className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider pb-3 pr-4">Step</th>
+                  <th className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider pb-3">What happens</th>
+                </tr>
+              </thead>
+              <tbody>
+                {exam.webOptions.process.map((s, i) => (
+                  <tr key={i} className="border-b border-zinc-50 last:border-0">
+                    <td className="py-3 pr-4 text-[13px] font-semibold text-zinc-900 whitespace-nowrap">{s.step}</td>
+                    <td className="py-3 text-[13px] text-zinc-500">{s.description}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Useful Links — Predictors & College Lists */}
         <div className="bg-white rounded-2xl border border-zinc-200 p-6 sm:p-7">
-          <h2 className="text-[15px] font-bold text-zinc-900 mb-4">Official links</h2>
-          <div className="space-y-2">
-            <a
-              href={exam.officialWebsite}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 text-[14px] text-blue-600 hover:text-blue-700 font-medium transition-colors"
-            >
-              <ExternalLink className="h-4 w-4" />
-              Official website — {exam.name}
-            </a>
-            <a
-              href={exam.applicationLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 text-[14px] text-blue-600 hover:text-blue-700 font-medium transition-colors"
-            >
-              <ExternalLink className="h-4 w-4" />
-              Apply / Registration portal
-            </a>
+          <div className="flex items-center gap-2 mb-4">
+            <Link2 className="h-4 w-4 text-zinc-400" />
+            <h2 className="text-[15px] font-bold text-zinc-900">Useful links — Predictors &amp; college lists</h2>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-2">
+            {exam.webOptions.links.map((link) => (
+              <a
+                key={link.url}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-start gap-3 rounded-xl border border-zinc-100 p-4 hover:border-zinc-200 hover:bg-zinc-50 transition-all group"
+              >
+                <ExternalLink className="h-4 w-4 text-zinc-300 group-hover:text-zinc-500 shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-[13px] font-semibold text-zinc-900">{link.label}</p>
+                  <p className="text-[12px] text-zinc-400 mt-0.5">{link.description}</p>
+                </div>
+              </a>
+            ))}
           </div>
         </div>
       </div>
