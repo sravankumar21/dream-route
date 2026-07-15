@@ -72,6 +72,10 @@ export default function OrbitalBackground() {
   const svgRef = useRef<SVGSVGElement>(null);
   const groupRef = useRef<SVGGElement>(null);
 
+  // Center the orbital system in the viewport
+  const centerX = 600;
+  const centerY = 450;
+
   useEffect(() => {
     const group = groupRef.current;
     if (!group) return;
@@ -82,7 +86,7 @@ export default function OrbitalBackground() {
     );
 
     return () => rotateAnim.cancel();
-  }, []);
+  }, [centerX, centerY]);
 
   useEffect(() => {
     const svg = svgRef.current;
@@ -119,10 +123,6 @@ export default function OrbitalBackground() {
       animations.forEach((a) => a.cancel());
     };
   }, []);
-
-  // Center the orbital system in the viewport
-  const centerX = 600;
-  const centerY = 450;
 
   return (
     <div
@@ -167,7 +167,7 @@ export default function OrbitalBackground() {
           </mask>
         </defs>
 
-        <g ref={groupRef} mask="url(#orbital-mask)">
+        <g ref={groupRef} mask="url(#orbital-mask)" style={{ transformOrigin: `${centerX}px ${centerY}px` }}>
           {rings.map((ring, i) => (
             <path
               key={i}
