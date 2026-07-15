@@ -9,7 +9,7 @@ import { CareerIcon } from "@/components/careers/CareerIcon";
 import CareerCard from "@/components/careers/CareerCard";
 import { exams } from "@/data/exams";
 import { scholarships } from "@/data/scholarships";
-import CursorRocket from "@/components/ui/CursorRocket";
+import CursorRocket from "@/components/ui/ScrollRocket";
 
 const howItWorks = [
   {
