@@ -3,13 +3,12 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowRight, Search, MapPin, GraduationCap, Target, Award, Briefcase, Wallet } from "lucide-react";
+import { ArrowRight, Search, MapPin, GraduationCap, Target, Award } from "lucide-react";
 import { careers, searchCareers } from "@/data/careers";
 import { CareerIcon } from "@/components/careers/CareerIcon";
 import CareerCard from "@/components/careers/CareerCard";
 import { exams } from "@/data/exams";
 import { scholarships } from "@/data/scholarships";
-import BackgroundGrid from "@/components/ui/BackgroundGrid";
 
 const howItWorks = [
   {
@@ -71,8 +70,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen relative">
-      <BackgroundGrid />
+    <div className="min-h-screen">
       {/* Hero */}
       <section className="relative overflow-hidden bg-zinc-900 text-white">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-800/50 via-zinc-900 to-zinc-900" />
