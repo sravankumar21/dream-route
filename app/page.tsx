@@ -284,17 +284,14 @@ export default function Home() {
                 href="/scholarships"
                 className="h-full flex flex-col bg-white p-6 rounded-2xl border border-zinc-200 hover:border-zinc-300 hover:shadow-[0_2px_12px_rgba(0,0,0,0.04)] transition-all duration-200 group"
               >
-                <div className="flex items-center gap-2 mb-2">
-                  <Award className="h-4 w-4 text-zinc-400" />
-                  <span className="text-[12px] text-zinc-400 font-medium">{s.provider}</span>
-                </div>
-                <h3 className="text-[16px] font-bold text-zinc-900 tracking-[-0.01em] group-hover:text-blue-600 transition-colors line-clamp-1">
+                <span className="text-[11px] text-zinc-400 font-medium uppercase tracking-wider">{s.provider}</span>
+                <h3 className="text-[15px] font-bold text-zinc-900 tracking-[-0.01em] mt-1 line-clamp-1">
                   {s.name}
                 </h3>
-                <p className="text-[13px] text-zinc-500 mt-1 mb-3 flex-1 line-clamp-2">{s.description}</p>
-                <div className="flex items-center justify-between pt-3 border-t border-zinc-100">
+                <p className="text-[12px] text-zinc-500 mt-2 mb-4 line-clamp-2 flex-1">{s.description}</p>
+                <div className="flex items-center justify-between">
                   <span className="text-[13px] font-bold text-emerald-700">{s.amount}</span>
-                  <span className="text-[12px] text-zinc-400">Apply &rarr;</span>
+                  <span className="text-[12px] font-medium text-zinc-900 group-hover:text-zinc-600 transition-colors">Apply &rarr;</span>
                 </div>
               </Link>
             ))}
