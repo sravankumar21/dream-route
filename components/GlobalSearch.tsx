@@ -117,15 +117,15 @@ export default function GlobalSearch({ open, onClose }: { open: boolean; onClose
       >
         <div className="max-w-3xl mx-auto h-full flex flex-col">
           {/* Search input */}
-          <div className="flex items-center gap-4 px-8 pt-8 pb-5 border-b border-zinc-100">
-            <Search className="h-5 w-5 text-zinc-400 shrink-0" />
+          <div className="flex items-center gap-3 px-6 pt-6 pb-4 border-b border-zinc-100">
+            <Search className="h-4 w-4 text-zinc-400 shrink-0" />
             <input
               ref={inputRef}
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search careers, colleges, exams, scholarships..."
-              className="flex-1 text-[20px] sm:text-[24px] text-zinc-900 placeholder:text-zinc-300 outline-none bg-transparent font-light"
+              className="flex-1 text-[16px] sm:text-[18px] text-zinc-900 placeholder:text-zinc-300 outline-none bg-transparent font-light"
             />
             {query && (
               <button
@@ -144,24 +144,24 @@ export default function GlobalSearch({ open, onClose }: { open: boolean; onClose
           </div>
 
           {/* Content */}
-          <div className="flex-1 overflow-y-auto px-8 py-6">
+          <div className="flex-1 overflow-y-auto px-6 py-4">
             {query.length < 2 ? (
               <div>
-                <p className="text-[11px] font-semibold text-zinc-300 uppercase tracking-wider mb-4">
+                <p className="text-[10px] font-semibold text-zinc-300 uppercase tracking-wider mb-3">
                   Quick Links
                 </p>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-8 gap-y-1">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-0">
                   {quickLinks.map((link) => (
                     <button
                       key={link.label}
                       onClick={() => navigate(link.url)}
-                      className="flex items-center gap-3 py-3 text-left group"
+                      className="flex items-center gap-2 py-2 text-left group"
                     >
                       <div className="min-w-0">
-                        <p className="text-[15px] text-zinc-700 group-hover:text-zinc-900 font-medium truncate transition-colors">
+                        <p className="text-[13px] text-zinc-700 group-hover:text-zinc-900 font-medium truncate transition-colors">
                           {link.label}
                         </p>
-                        <p className={`text-[12px] ${tagColors[link.tag] || "text-zinc-400"}`}>
+                        <p className={`text-[10px] ${tagColors[link.tag] || "text-zinc-400"}`}>
                           {link.tag}
                         </p>
                       </div>
@@ -170,35 +170,35 @@ export default function GlobalSearch({ open, onClose }: { open: boolean; onClose
                 </div>
               </div>
             ) : loading ? (
-              <div className="py-16 text-center">
-                <p className="text-[14px] text-zinc-300">Searching...</p>
+              <div className="py-12 text-center">
+                <p className="text-[13px] text-zinc-300">Searching...</p>
               </div>
             ) : results.length === 0 ? (
-              <div className="py-16 text-center">
-                <p className="text-[14px] text-zinc-300">No results for &ldquo;{query}&rdquo;</p>
+              <div className="py-12 text-center">
+                <p className="text-[13px] text-zinc-300">No results for &ldquo;{query}&rdquo;</p>
               </div>
             ) : (
               <div>
-                <p className="text-[11px] font-semibold text-zinc-300 uppercase tracking-wider mb-4">
+                <p className="text-[10px] font-semibold text-zinc-300 uppercase tracking-wider mb-3">
                   Results
                 </p>
-                <div className="space-y-1">
+                <div className="space-y-0">
                   {results.map((result, i) => (
                     <button
                       key={`${result.title}-${result.tag}-${i}`}
                       onClick={() => navigate(result.url)}
-                      className="w-full flex items-center justify-between gap-4 py-3.5 px-3 -mx-3 rounded-xl text-left hover:bg-zinc-50 transition-colors group"
+                      className="w-full flex items-center justify-between gap-3 py-2.5 px-2 -mx-2 rounded-lg text-left hover:bg-zinc-50 transition-colors group"
                     >
                       <div className="min-w-0">
-                        <div className="flex items-center gap-2.5">
-                          <span className="text-[15px] text-zinc-700 group-hover:text-zinc-900 font-medium truncate transition-colors">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[13px] text-zinc-700 group-hover:text-zinc-900 font-medium truncate transition-colors">
                             {result.title}
                           </span>
-                          <span className={`text-[11px] font-medium ${tagColors[result.tag] || "text-zinc-400"}`}>
+                          <span className={`text-[10px] font-medium ${tagColors[result.tag] || "text-zinc-400"}`}>
                             {result.tag}
                           </span>
                         </div>
-                        <p className="text-[13px] text-zinc-400 truncate mt-0.5">{result.description}</p>
+                        <p className="text-[11px] text-zinc-400 truncate mt-0.5">{result.description}</p>
                       </div>
                     </button>
                   ))}
