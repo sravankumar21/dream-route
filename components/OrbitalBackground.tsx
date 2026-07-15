@@ -120,8 +120,9 @@ export default function OrbitalBackground() {
     };
   }, []);
 
-  const centerX = 420;
-  const centerY = 580;
+  // Center the orbital system in the viewport
+  const centerX = 600;
+  const centerY = 450;
 
   return (
     <div
@@ -133,7 +134,7 @@ export default function OrbitalBackground() {
         className="absolute inset-0 z-10"
         style={{
           background:
-            "radial-gradient(ellipse 80% 80% at 45% 55%, transparent 25%, #141416 90%)",
+            "radial-gradient(ellipse 90% 90% at 50% 50%, transparent 30%, #141416 85%)",
         }}
       />
 
@@ -155,10 +156,10 @@ export default function OrbitalBackground() {
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
-          <radialGradient id="orbital-vignette" cx="45%" cy="55%" r="55%">
+          <radialGradient id="orbital-vignette" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="white" stopOpacity="1" />
-            <stop offset="50%" stopColor="white" stopOpacity="1" />
-            <stop offset="80%" stopColor="white" stopOpacity="0.5" />
+            <stop offset="60%" stopColor="white" stopOpacity="1" />
+            <stop offset="85%" stopColor="white" stopOpacity="0.4" />
             <stop offset="100%" stopColor="white" stopOpacity="0" />
           </radialGradient>
           <mask id="orbital-mask">
