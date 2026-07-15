@@ -7,7 +7,7 @@ import { ArrowRight, Search, MapPin, GraduationCap, Target, Award } from "lucide
 import { careers, searchCareers } from "@/data/careers";
 import { CareerIcon } from "@/components/careers/CareerIcon";
 import CareerCard from "@/components/careers/CareerCard";
-import SpiralBackground from "@/components/SpiralBackground";
+import OrbitalBackground from "@/components/OrbitalBackground";
 import { exams } from "@/data/exams";
 import { scholarships } from "@/data/scholarships";
 
@@ -74,7 +74,7 @@ export default function Home() {
     <div className="min-h-screen">
       {/* Hero */}
       <section className="relative overflow-hidden" style={{ backgroundColor: "#141416" }}>
-        <SpiralBackground />
+        <OrbitalBackground />
         <div className="relative z-10 max-w-6xl mx-auto px-5 sm:px-8 py-28 md:py-36">
           <div className="text-center max-w-3xl mx-auto text-white">
             <p className="text-[13px] font-semibold text-zinc-400 uppercase tracking-[0.15em] mb-5">
