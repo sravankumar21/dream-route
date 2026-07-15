@@ -9,7 +9,7 @@ import { CareerIcon } from "@/components/careers/CareerIcon";
 import CareerCard from "@/components/careers/CareerCard";
 import { exams } from "@/data/exams";
 import { scholarships } from "@/data/scholarships";
-import CursorRocket from "@/components/ui/ScrollRocket";
+import BackgroundGrid from "@/components/ui/BackgroundGrid";
 
 const howItWorks = [
   {
@@ -71,8 +71,8 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen">
-      <CursorRocket />
+    <div className="min-h-screen relative">
+      <BackgroundGrid />
       {/* Hero */}
       <section className="relative overflow-hidden bg-zinc-900 text-white">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-800/50 via-zinc-900 to-zinc-900" />
