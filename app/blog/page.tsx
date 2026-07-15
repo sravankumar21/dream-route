@@ -124,7 +124,7 @@ export default async function BlogPage({
                       <span className="text-[12px] text-zinc-400">{timeAgo(new Date(post.publishedAt))}</span>
                     </div>
 
-                    <h3 className="text-[16px] font-bold text-zinc-900 tracking-[-0.01em] group-hover:text-blue-600 transition-colors mb-1.5">
+                    <h3 className="text-[16px] font-bold text-zinc-900 tracking-[-0.01em] group-hover:text-zinc-900 transition-colors mb-1.5">
                       {post.title}
                     </h3>
 
