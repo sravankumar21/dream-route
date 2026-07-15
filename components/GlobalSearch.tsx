@@ -111,7 +111,7 @@ export default function GlobalSearch({ open, onClose }: { open: boolean; onClose
       <div
         className="absolute top-0 left-0 right-0 bg-white shadow-2xl"
         style={{
-          height: "85vh",
+          height: "55vh",
           animation: "searchSlideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards",
         }}
       >
