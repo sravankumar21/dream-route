@@ -71,33 +71,28 @@ function generateEllipsePath(
 export default function OrbitalBackground() {
   const svgRef = useRef<SVGSVGElement>(null);
   const groupRef = useRef<SVGGElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  // Center the orbital system in the viewport
   const centerX = 600;
   const centerY = 450;
 
+  // Create all animations and store refs
   useEffect(() => {
+    const svg = svgRef.current;
     const group = groupRef.current;
-    if (!group) return;
+    if (!svg || !group) return;
 
+    const allAnimations: Animation[] = [];
+
+    // Rotation animation for the entire group
     const rotateAnim = group.animate(
       [{ transform: "rotate(0deg)" }, { transform: "rotate(360deg)" }],
       { duration: 210000, iterations: Infinity, easing: "linear" }
     );
+    allAnimations.push(rotateAnim);
 
-    return () => rotateAnim.cancel();
-  }, [centerX, centerY]);
-
-  useEffect(() => {
-    const svg = svgRef.current;
-    if (!svg) return;
-
-    const animations: Animation[] = [];
-
+    // Node travel animations
     nodes.forEach((node, i) => {
-      const ellipse = svg.querySelector(`#orbit-${node.ringIndex}`) as SVGPathElement;
-      if (!ellipse) return;
-
       const dot = svg.querySelector(`#node-${i}`) as SVGCircleElement;
       if (!dot) return;
 
@@ -115,17 +110,35 @@ export default function OrbitalBackground() {
           easing: "linear",
         }
       );
-
-      animations.push(dotAnim);
+      allAnimations.push(dotAnim);
     });
 
+    // IntersectionObserver: pause when off-screen, play when visible
+    const container = containerRef.current;
+    if (!container) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          allAnimations.forEach((a) => a.play());
+        } else {
+          allAnimations.forEach((a) => a.pause());
+        }
+      },
+      { threshold: 0 }
+    );
+
+    observer.observe(container);
+
     return () => {
-      animations.forEach((a) => a.cancel());
+      observer.disconnect();
+      allAnimations.forEach((a) => a.cancel());
     };
-  }, []);
+  }, [centerX, centerY]);
 
   return (
     <div
+      ref={containerRef}
       className="absolute inset-0 overflow-hidden pointer-events-none"
       style={{ mixBlendMode: "screen" }}
     >
@@ -157,10 +170,10 @@ export default function OrbitalBackground() {
             </feMerge>
           </filter>
           <radialGradient id="orbital-vignette" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="white" stopOpacity="1" />
-            <stop offset="60%" stopColor="white" stopOpacity="1" />
-            <stop offset="85%" stopColor="white" stopOpacity="0.4" />
-            <stop offset="100%" stopColor="white" stopOpacity="0" />
+            <stop offset="0%" stopColor="white" stopOpacity={1} />
+            <stop offset="60%" stopColor="white" stopOpacity={1} />
+            <stop offset="85%" stopColor="white" stopOpacity={0.4} />
+            <stop offset="100%" stopColor="white" stopOpacity={0} />
           </radialGradient>
           <mask id="orbital-mask">
             <rect width="1200" height="900" fill="url(#orbital-vignette)" />
@@ -191,7 +204,7 @@ export default function OrbitalBackground() {
               cy={centerY}
               r={2.5}
               fill="white"
-              opacity="0.8"
+              opacity={0.8}
               filter="url(#node-glow)"
               style={{
                 offsetPath: `path("${generateEllipsePath(centerX, centerY, rings[node.ringIndex].rx, rings[node.ringIndex].ry, rings[node.ringIndex].tilt)}")`,

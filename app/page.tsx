@@ -80,7 +80,6 @@ export default function Home() {
       <section className="py-16">
         <div className="max-w-6xl mx-auto px-5 sm:px-8">
           <div className="text-center mb-16">
-            <p className="text-[12px] font-semibold text-zinc-400 uppercase tracking-[0.12em] mb-3">Simple Process</p>
             <h2 className="text-3xl md:text-4xl font-extrabold text-zinc-900 tracking-[-0.03em]">
               How it works
             </h2>
