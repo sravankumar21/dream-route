@@ -19,6 +19,9 @@ export const metadata: Metadata = {
   description:
     "Don't know which career to pick? DreamRoute helps Indian students choose a career path, see exactly what skills they need, and learn them for free using curated resources.",
   keywords: ["career guidance", "free courses", "skill development", "Indian students", "career path", "learn to code", "NEET", "UPSC", "coding"],
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({
