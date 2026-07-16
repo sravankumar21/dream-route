@@ -25,6 +25,7 @@ export interface IBlogPost extends Document {
   imageUrl?: string;
   status: "new" | "reviewed" | "published" | "archived";
   adminNotes?: string;
+  featured?: boolean;
 }
 
 const BlogPostSchema = new Schema<IBlogPost>(
@@ -61,6 +62,7 @@ const BlogPostSchema = new Schema<IBlogPost>(
       default: "new",
     },
     adminNotes: { type: String },
+    featured: { type: Boolean, default: false },
   },
   { timestamps: true }
 );
