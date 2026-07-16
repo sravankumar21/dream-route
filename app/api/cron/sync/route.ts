@@ -30,12 +30,33 @@ async function summarizeWithGemini(title: string, text: string): Promise<string 
             {
               parts: [
                 {
-                  text: `Summarize this news article in 2-3 concise sentences for a student who wants to understand why it matters. Be factual, no fluff.\n\nTitle: ${title}\nContent: ${text.slice(0, 1000)}`,
+                  text: `You are a skilled content writer for an AI & career news blog. Write a structured, engaging summary of this article that reads like a short story — not a dry report.
+
+Structure your response in exactly these sections, separated by blank lines:
+
+**Hook** — Start with a compelling 1-sentence hook that makes the reader want to know more. Use context, surprise, or a bold claim.
+
+**What Happened** — Explain the news in 2-3 sentences. What was announced, released, or discovered? Who is involved?
+
+**Why It Matters** — Explain the real-world impact in 2-2 sentences. How does this affect students, developers, or the AI industry? Give context the reader wouldn't get from the headline alone.
+
+**What's Next** — End with 1-2 sentences about what this means going forward, what to watch for, or what students/developers should do.
+
+Rules:
+- Write in a conversational, confident tone — like explaining to a smart friend
+- Use plain English, no jargon without explanation
+- Be specific — mention real companies, tools, numbers when available
+- No bullet points — this is prose
+- Total length: 100-180 words
+- If the article lacks details, use what's available and note what's uncertain
+
+Title: ${title}
+Content: ${text.slice(0, 1500)}`,
                 },
               ],
             },
           ],
-          generationConfig: { maxOutputTokens: 150, temperature: 0.3 },
+          generationConfig: { maxOutputTokens: 300, temperature: 0.4 },
         }),
       }
     );
@@ -297,6 +318,62 @@ async function syncYouTube(): Promise<SyncResult[]> {
 
 // ── Main handler ──
 
+function parseAiAnalysis(raw: string | undefined): { hook: string; whatHappened: string; whyItMatters: string; whatsNext: string } | undefined {
+  if (!raw) return undefined;
+
+  const sections = { hook: "", whatHappened: "", whyItMatters: "", whatsNext: "" };
+  const lines = raw.split("\n");
+  let currentKey: keyof typeof sections | null = null;
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (/^\*\*hook\*\*/i.test(trimmed) || /^hook[:\s]/i.test(trimmed)) {
+      currentKey = "hook";
+      const after = trimmed.replace(/^\*\*.*?\*\*[:\s-]*/i, "").replace(/^.*?[:\s-]+/i, "");
+      if (after) sections.hook = after;
+    } else if (/^\*\*what happened\*\*/i.test(trimmed) || /^what happened[:\s]/i.test(trimmed)) {
+      currentKey = "whatHappened";
+      const after = trimmed.replace(/^\*\*.*?\*\*[:\s-]*/i, "").replace(/^.*?[:\s-]+/i, "");
+      if (after) sections.whatHappened = after;
+    } else if (/^\*\*why it matters\*\*/i.test(trimmed) || /^why it matters[:\s]/i.test(trimmed)) {
+      currentKey = "whyItMatters";
+      const after = trimmed.replace(/^\*\*.*?\*\*[:\s-]*/i, "").replace(/^.*?[:\s-]+/i, "");
+      if (after) sections.whyItMatters = after;
+    } else if (/^\*\*what'?s? next\*\*/i.test(trimmed) || /^what'?s? next[:\s]/i.test(trimmed)) {
+      currentKey = "whatsNext";
+      const after = trimmed.replace(/^\*\*.*?\*\*[:\s-]*/i, "").replace(/^.*?[:\s-]+/i, "");
+      if (after) sections.whatsNext = after;
+    } else if (currentKey && trimmed) {
+      sections[currentKey] += (sections[currentKey] ? " " : "") + trimmed;
+    }
+  }
+
+  // Fallback: if parsing failed, put everything in hook
+  if (!sections.hook && !sections.whatHappened && !sections.whyItMatters && !sections.whatsNext) {
+    sections.hook = raw.slice(0, 200);
+  }
+
+  return sections;
+}
+
+function extractTags(text: string): string[] {
+  const tagPatterns = [
+    /openai|chatgpt|gpt/i, /google|gemini|deepmind/i, /anthropic|claude/i,
+    /meta|llama/i, /microsoft|copilot/i, /nvidia|cuda/i,
+    /startup|funding|acquisition/i, /regulation|policy|law/i,
+    /open.?source|github/i, /robotics|autonomous/i,
+    /healthcare|medical/i, /education|learning/i,
+    /coding|programming|developer/i, /design|ui|ux/i,
+  ];
+  const tags: string[] = [];
+  for (const pat of tagPatterns) {
+    if (pat.test(text)) {
+      tags.push(pat.source.replace(/[\/\\^$.*+?()[\]{}|]/g, "").replace(/\?/g, "").split("|")[0].toLowerCase());
+    }
+  }
+  return [...new Set(tags)].slice(0, 5);
+}
+
 export async function GET(req: Request) {
   const authHeader = req.headers.get("authorization");
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
@@ -340,14 +417,19 @@ export async function GET(req: Request) {
 
     const allPosts = [...redditPosts, ...rssPosts, ...hnPosts];
 
-    const postsWithSummary: (Post & { aiSummary?: string })[] = [];
+    const postsWithSummary: (Post & { aiSummary?: string; aiAnalysis?: ReturnType<typeof parseAiAnalysis> })[] = [];
     for (let i = 0; i < allPosts.length; i += 5) {
       const batch = allPosts.slice(i, i + 5);
       const summaries = await Promise.all(
         batch.map((p) => summarizeWithGemini(p.title, p.summary || p.title))
       );
       batch.forEach((p, j) => {
-        postsWithSummary.push({ ...p, aiSummary: summaries[j] || undefined });
+        const raw = summaries[j];
+        postsWithSummary.push({
+          ...p,
+          aiSummary: raw || undefined,
+          aiAnalysis: parseAiAnalysis(raw || undefined),
+        });
       });
     }
 
@@ -368,15 +450,18 @@ export async function GET(req: Request) {
           slug,
           summary: post.summary,
           aiSummary: post.aiSummary,
+          aiAnalysis: post.aiAnalysis,
           source: rssPosts.includes(post) ? "rss" : hnPosts.includes(post) ? "hn" : "reddit",
           sourceUrl: post.url,
           sourceName: post.sourceName,
           author: post.author,
           category: categorize(post.title),
+          tags: extractTags(`${post.title} ${post.summary}`),
           score: post.score,
           comments: post.comments,
           publishedAt: post.publishedAt,
           fetchedAt: new Date(),
+          status: "new",
         });
         stored++;
       } catch {

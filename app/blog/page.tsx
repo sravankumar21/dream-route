@@ -148,7 +148,13 @@ export default async function BlogPage({
                             {post.title}
                           </h3>
 
-                          {post.aiSummary ? (
+                          {post.aiAnalysis?.hook ? (
+                            <div className="text-[13px] text-zinc-600 leading-relaxed mb-3 space-y-1.5">
+                              <p className="font-medium text-zinc-700">{post.aiAnalysis.hook}</p>
+                              {post.aiAnalysis.whatHappened && <p>{post.aiAnalysis.whatHappened}</p>}
+                              {post.aiAnalysis.whyItMatters && <p className="text-zinc-500">{post.aiAnalysis.whyItMatters}</p>}
+                            </div>
+                          ) : post.aiSummary ? (
                             <p className="text-[13px] text-zinc-600 leading-relaxed mb-3">
                               {post.aiSummary}
                             </p>
