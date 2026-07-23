@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, MapPin, GraduationCap, Target, Award } from "lucide-react";
+import { ArrowRight, MapPin, GraduationCap, Target, Award, Brain, BarChart3 } from "lucide-react";
 import { careers } from "@/data/careers";
 import CareerCard from "@/components/careers/CareerCard";
 import OrbitalBackground from "@/components/OrbitalBackground";
@@ -175,6 +175,65 @@ export default function Home() {
                 </div>
               </Link>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Counselling Simulator Preview */}
+      <section className="py-16 bg-zinc-50">
+        <div className="max-w-6xl mx-auto px-5 sm:px-8">
+          <div className="flex items-end justify-between mb-12">
+            <div>
+              <p className="text-[12px] font-semibold text-zinc-400 uppercase tracking-[0.12em] mb-3">Seat Allocation Intelligence</p>
+              <h2 className="text-3xl md:text-4xl font-extrabold text-zinc-900 tracking-[-0.03em]">
+                Counselling Simulator
+              </h2>
+            </div>
+            <Link
+              href="/counselling"
+              className="text-[14px] text-zinc-500 hover:text-zinc-900 font-medium hidden sm:inline-flex items-center gap-1.5 transition-colors"
+            >
+              Explore
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Link
+              href="/counselling/predict"
+              className="h-full flex flex-col bg-white p-6 rounded-2xl border border-zinc-200 hover:border-zinc-300 hover:shadow-[0_2px_12px_rgba(0,0,0,0.04)] transition-all duration-200 group"
+            >
+              <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center mb-3">
+                <Brain className="h-5 w-5 text-indigo-600" />
+              </div>
+              <h3 className="text-[16px] font-bold text-zinc-900 tracking-[-0.01em] group-hover:text-zinc-900 transition-colors">
+                Predict My College
+              </h3>
+              <p className="text-[14px] text-zinc-500 mt-1 flex-1">
+                Enter your NEET rank and get instant predictions with explanations.
+              </p>
+              <span className="text-[13px] font-semibold text-zinc-900 flex items-center gap-1 mt-3 group-hover:gap-2 transition-all">
+                Start predicting <ArrowRight className="h-3.5 w-3.5" />
+              </span>
+            </Link>
+
+            <Link
+              href="/counselling/dashboard"
+              className="h-full flex flex-col bg-white p-6 rounded-2xl border border-zinc-200 hover:border-zinc-300 hover:shadow-[0_2px_12px_rgba(0,0,0,0.04)] transition-all duration-200 group"
+            >
+              <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center mb-3">
+                <BarChart3 className="h-5 w-5 text-blue-600" />
+              </div>
+              <h3 className="text-[16px] font-bold text-zinc-900 tracking-[-0.01em] group-hover:text-zinc-900 transition-colors">
+                Transparency Dashboard
+              </h3>
+              <p className="text-[14px] text-zinc-500 mt-1 flex-1">
+                See seat availability, closing rank trends, and allocation patterns.
+              </p>
+              <span className="text-[13px] font-semibold text-zinc-900 flex items-center gap-1 mt-3 group-hover:gap-2 transition-all">
+                View dashboard <ArrowRight className="h-3.5 w-3.5" />
+              </span>
+            </Link>
           </div>
         </div>
       </section>

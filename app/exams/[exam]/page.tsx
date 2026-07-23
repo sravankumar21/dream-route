@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ExternalLink, Target, BookOpen, Calendar, Clock, Monitor, CheckCircle, List, Link2 } from "lucide-react";
+import { ArrowLeft, ExternalLink, Target, BookOpen, Calendar, Clock, Monitor, CheckCircle, List, Link2, Brain } from "lucide-react";
 import { exams, getExamById } from "@/data/exams";
 
 export function generateStaticParams() {
@@ -166,6 +166,34 @@ export default async function ExamDetailPage({ params }: { params: Promise<{ exa
             </table>
           </div>
         </div>
+
+        {/* Counselling CTA for NEET */}
+        {exam.id === "neet" && (
+          <div className="bg-zinc-900 rounded-2xl p-6 sm:p-7 mb-8">
+            <div className="flex items-center gap-3 mb-3">
+              <Brain className="h-5 w-5 text-zinc-400" />
+              <h2 className="text-[15px] font-bold text-white">NEET Counselling Simulator</h2>
+            </div>
+            <p className="text-[13px] text-zinc-400 mb-4 max-w-lg">
+              Predict your chances at every medical college, understand how counselling rounds work, and see seat movement in real-time.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <Link
+                href="/counselling/predict"
+                className="bg-white text-zinc-900 text-[13px] font-semibold px-5 py-2.5 rounded-lg hover:bg-zinc-100 transition-colors inline-flex items-center gap-2"
+              >
+                <Brain className="h-4 w-4" />
+                Predict My College
+              </Link>
+              <Link
+                href="/counselling/process"
+                className="border border-zinc-700 text-zinc-300 text-[13px] font-semibold px-5 py-2.5 rounded-lg hover:bg-zinc-800 hover:border-zinc-600 transition-all"
+              >
+                How Counselling Works
+              </Link>
+            </div>
+          </div>
+        )}
 
         {/* Useful Links — Predictors & College Lists */}
         <div className="bg-white rounded-2xl border border-zinc-200 p-6 sm:p-7">
