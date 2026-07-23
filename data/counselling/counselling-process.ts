@@ -61,7 +61,7 @@ export const mccCounselling: CounsellingProcess = {
       id: "choice-filling",
       step: 2,
       title: "Choice Filling & Locking",
-      description: "Select and排列 your preferred colleges/courses in order of preference. You can add unlimited choices. Lock your choices before the deadline.",
+      description: "Select and rank your preferred colleges/courses in order of preference. You can add unlimited choices. Lock your choices before the deadline.",
       details: [
         "Log in to your MCC account during the choice filling window",
         "Browse available colleges and courses",
