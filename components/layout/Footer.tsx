@@ -23,9 +23,7 @@ export default function Footer() {
               {[
                 { href: "/careers", label: "Career Paths" },
                 { href: "/education", label: "Education Explorer" },
-                { href: "/exams", label: "Exam Targets" },
                 { href: "/scholarships", label: "Scholarships" },
-                { href: "/workplace", label: "Workplace" },
                 { href: "/blog", label: "AI & Career News" },
               ].map((link) => (
                 <li key={link.href}>

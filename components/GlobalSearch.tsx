@@ -14,7 +14,6 @@ interface SearchResult {
 const tagColors: Record<string, string> = {
   Careers: "text-zinc-400",
   Skills: "text-zinc-500",
-  Exams: "text-emerald-500",
   Scholarships: "text-amber-500",
   Blog: "text-violet-500",
 };
@@ -23,15 +22,11 @@ const quickLinks = [
   { label: "Software Engineer", tag: "Careers", url: "/careers/software-engineer" },
   { label: "Data Scientist", tag: "Careers", url: "/careers/data-scientist" },
   { label: "UI/UX Designer", tag: "Careers", url: "/careers/ui-ux-designer" },
-  { label: "NEET", tag: "Exams", url: "/exams/neet" },
-  { label: "JEE Main", tag: "Exams", url: "/exams/jee-main" },
-  { label: "TS EAMCET", tag: "Exams", url: "/exams/ts-eamcet" },
-  { label: "GATE", tag: "Exams", url: "/exams/gate" },
-  { label: "CAT", tag: "Exams", url: "/exams/cat" },
+  { label: "Doctor (MBBS)", tag: "Careers", url: "/careers/doctor-mbbs" },
+  { label: "Chartered Accountant", tag: "Careers", url: "/careers/chartered-accountant" },
   { label: "Scholarships", tag: "Scholarships", url: "/scholarships" },
   { label: "Education Paths", tag: "Explore", url: "/education" },
   { label: "AI News", tag: "Blog", url: "/blog" },
-  { label: "Workplace", tag: "Explore", url: "/workplace" },
 ];
 
 export default function GlobalSearch({ open, onClose }: { open: boolean; onClose: () => void }) {

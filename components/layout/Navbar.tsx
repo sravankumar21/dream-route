@@ -9,11 +9,8 @@ import GlobalSearch from "@/components/GlobalSearch";
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/education", label: "Education" },
-  { href: "/exams", label: "Exams" },
-  { href: "/counselling", label: "Counselling" },
-  { href: "/scholarships", label: "Scholarships" },
   { href: "/careers", label: "Careers" },
-  { href: "/workplace", label: "Workplace" },
+  { href: "/scholarships", label: "Scholarships" },
   { href: "/blog", label: "Blog" },
 ];
 
@@ -71,14 +68,6 @@ export default function Navbar() {
                     <div className="w-[70px] h-[30px] bg-zinc-100 rounded-lg" />
                   ) : session ? (
                     <>
-                      {(session.user as any)?.role === "admin" && (
-                        <Link
-                          href="/admin/dashboard"
-                          className="text-[13px] text-zinc-500 hover:text-zinc-900 font-medium px-2.5 py-2 rounded-lg hover:bg-zinc-50 transition-all duration-150"
-                        >
-                          Admin
-                        </Link>
-                      )}
                       <Link
                         href="/saved"
                         className="text-[14px] text-zinc-500 hover:text-zinc-900 font-medium px-2.5 py-2 rounded-lg hover:bg-zinc-50 transition-all duration-150 flex items-center gap-1.5"

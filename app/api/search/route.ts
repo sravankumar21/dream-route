@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { careers } from "@/data/careers";
-import { exams } from "@/data/exams";
 import { scholarships } from "@/data/scholarships";
 import { connectDB } from "@/lib/db";
 import BlogPost from "@/models/BlogPost";
@@ -44,19 +43,6 @@ export async function GET(req: Request) {
           url: `/careers/${c.slug}/${skill.id}`,
         });
       }
-    }
-  }
-
-  // Search exams
-  for (const e of exams) {
-    const text = `${e.name} ${e.fullName} ${e.conductedBy}`.toLowerCase();
-    if (text.includes(q)) {
-      results.push({
-        title: e.name,
-        description: e.fullName,
-        tag: "Exams",
-        url: `/exams/${e.id}`,
-      });
     }
   }
 
