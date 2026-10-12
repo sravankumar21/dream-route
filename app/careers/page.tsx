@@ -1,11 +1,13 @@
 import Link from "next/link";
+import Image from "next/image";
 import { careers, careerCategories, searchCareers } from "@/data/careers";
 import CareerCard from "@/components/careers/CareerCard";
 import { CareerIcon } from "@/components/careers/CareerIcon";
+import { categoryImages } from "@/lib/pexels";
 
 export const metadata = {
   title: "Career Paths | DreamRoute",
-  description: "Explore 18+ career paths. See exactly what skills you need to learn.",
+  description: "Explore career paths with clear skills, education routes, and opportunities.",
 };
 
 export default async function CareersPage({
@@ -27,25 +29,39 @@ export default async function CareersPage({
   }
 
   return (
-    <div className="min-h-screen bg-zinc-50 py-16">
-      <div className="max-w-6xl mx-auto px-5 sm:px-8">
-        <div className="text-center mb-14">
-          <p className="text-[12px] font-semibold text-zinc-400 uppercase tracking-[0.12em] mb-3">Browse</p>
-          <h1 className="text-3xl md:text-4xl font-extrabold text-zinc-900 tracking-[-0.03em] mb-3">
-            {searchQuery ? `Results for "${searchQuery}"` : "Career Paths"}
-          </h1>
-          <p className="text-zinc-500 max-w-lg mx-auto text-[15px]">
-            {searchQuery
-              ? `${filteredCareers.length} career${filteredCareers.length !== 1 ? "s" : ""} found`
-              : "Pick a career. We'll show you exactly what skills to learn."}
-          </p>
+    <div className="min-h-screen bg-zinc-50">
+      {/* Hero with image */}
+      <section className="relative h-[260px] sm:h-[320px] overflow-hidden">
+        <Image
+          src="https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&cs=tinysrgb&w=1600"
+          alt="Careers opportunities"
+          fill
+          className="object-cover"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-zinc-950/80 via-zinc-950/60 to-transparent" />
+        <div className="relative z-10 max-w-6xl mx-auto px-5 sm:px-8 h-full flex items-center">
+          <div>
+            <p className="text-[12px] font-semibold text-zinc-300 uppercase tracking-[0.12em] mb-3">Browse</p>
+            <h1 className="text-3xl sm:text-4xl md:text-[48px] font-extrabold text-white tracking-[-0.03em] mb-3">
+              {searchQuery ? `Results for "${searchQuery}"` : "Career Paths"}
+            </h1>
+            <p className="text-zinc-300 max-w-xl text-[15px] leading-relaxed">
+              {searchQuery
+                ? `${filteredCareers.length} career${filteredCareers.length !== 1 ? "s" : ""} found`
+                : "Find the right career with skills, education routes, and growth insights."}
+            </p>
+          </div>
         </div>
+      </section>
 
-        {/* Filters */}
-        <div className="flex flex-wrap justify-center gap-2 mb-14">
+      <div className="max-w-6xl mx-auto px-5 sm:px-8 py-10 sm:py-14">
+
+        {/* Category tabs - mobile scrollable */}
+        <div className="flex flex-wrap gap-2 mb-10 -mx-1 overflow-x-auto pb-1">
           <Link
             href="/careers"
-            className={`px-4 py-2 rounded-lg text-[13px] font-semibold transition-all duration-150 ${
+            className={`px-4 py-2 rounded-full text-[13px] sm:text-[14px] font-semibold whitespace-nowrap transition-all duration-150 ${
               categoryFilter === "all"
                 ? "bg-zinc-900 text-white"
                 : "bg-white text-zinc-600 border border-zinc-200 hover:border-zinc-300 hover:text-zinc-900"
@@ -59,7 +75,7 @@ export default async function CareersPage({
               <Link
                 key={cat.id}
                 href={`/careers?category=${cat.id}`}
-                className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-[13px] font-semibold transition-all duration-150 ${
+                className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-[13px] sm:text-[14px] font-semibold whitespace-nowrap transition-all duration-150 ${
                   categoryFilter === cat.id
                     ? "bg-zinc-900 text-white"
                     : "bg-white text-zinc-600 border border-zinc-200 hover:border-zinc-300 hover:text-zinc-900"
@@ -73,7 +89,7 @@ export default async function CareersPage({
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {filteredCareers.map((career) => (
             <CareerCard key={career.id} career={career} />
           ))}
